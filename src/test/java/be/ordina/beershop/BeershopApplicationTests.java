@@ -1,4 +1,4 @@
-package com.ordina.beershop.beershop;
+package be.ordina.beershop;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
