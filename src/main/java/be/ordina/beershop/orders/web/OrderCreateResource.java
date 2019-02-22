@@ -1,4 +1,20 @@
 package be.ordina.beershop.orders.web;
 
-public class OrderCreateResource {
+import be.ordina.beershop.orders.domain.CreateOrderData;
+
+public class OrderCreateResource implements CreateOrderData {
+
+    private String number;
+
+    public OrderCreateResource() {
+    }
+
+    public OrderCreateResource(String number) {
+        this.number = number;
+    }
+
+    @Override
+    public String getNumber() {
+        return number;
+    }
 }
