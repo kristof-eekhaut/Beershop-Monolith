@@ -1,11 +1,11 @@
 package be.ordina.beershop.orders.infra;
 
 import be.ordina.beershop.orders.domain.entities.Order;
-import be.ordina.beershop.orders.domain.usecases.CreateOrder;
+import be.ordina.beershop.orders.domain.usecases.CreateOrderRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class OrderRepositoryImpl implements CreateOrder {
+public class OrderRepositoryImpl implements CreateOrderRepository {
 
     private OrderJpaRepository repository;
 

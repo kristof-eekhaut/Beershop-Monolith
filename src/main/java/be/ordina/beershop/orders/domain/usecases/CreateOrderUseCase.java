@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class CreateOrderUseCase {
 
-    private final CreateOrder createOrder;
+    private final CreateOrderRepository createOrder;
 
-    public CreateOrderUseCase(CreateOrder createOrder) {
+    public CreateOrderUseCase(CreateOrderRepository createOrder) {
         this.createOrder = createOrder;
     }
 

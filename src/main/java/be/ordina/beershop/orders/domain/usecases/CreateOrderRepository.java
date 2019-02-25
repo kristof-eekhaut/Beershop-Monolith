@@ -2,7 +2,7 @@ package be.ordina.beershop.orders.domain.usecases;
 
 import be.ordina.beershop.orders.domain.entities.Order;
 
-public interface CreateOrder {
+public interface CreateOrderRepository {
 
     void save(Order order);
 }
