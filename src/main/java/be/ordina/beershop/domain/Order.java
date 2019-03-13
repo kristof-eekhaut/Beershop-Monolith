@@ -1,14 +1,18 @@
 package be.ordina.beershop.domain;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
 @Entity
+@Table(name = "orders")
 public class Order {
 
     @Id
@@ -18,18 +22,11 @@ public class Order {
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
     private Set<Item> lineItems;
-    private String state;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus state;
     private LocalDateTime createdOn;
 
     public Order() {
-    }
-
-    public Order(UUID id, UUID accountId, UUID paymentProviderId, Set<Item> lineItems) {
-        this.id = UUID.randomUUID();
-        this.accountId = accountId;
-        this.paymentProviderId = paymentProviderId;
-        this.lineItems = lineItems;
-        this.state = OrderStatus.ORDER_CREATED.name();
     }
 
     public UUID getId() {
@@ -64,19 +61,19 @@ public class Order {
         this.lineItems = lineItems;
     }
 
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
     public LocalDateTime getCreatedOn() {
         return createdOn;
     }
 
     public void setCreatedOn(LocalDateTime createdOn) {
         this.createdOn = createdOn;
+    }
+
+    public OrderStatus getState() {
+        return state;
+    }
+
+    public void setState(OrderStatus state) {
+        this.state = state;
     }
 }
