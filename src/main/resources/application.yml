@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: beershop
+  datasource:
+    url: jdbc:h2:mem:beershopdb
+    driver-class-name: org.h2.Driver
+  flyway.locations: classpath:/db/migration/{vendor}
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
