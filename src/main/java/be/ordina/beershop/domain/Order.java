@@ -21,7 +21,7 @@ public class Order {
     private UUID paymentProviderId;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
-    private Set<Item> lineItems;
+    private Set<Product> lineItems;
     @Enumerated(EnumType.STRING)
     private OrderStatus state;
     private LocalDateTime createdOn;
@@ -53,11 +53,11 @@ public class Order {
         this.paymentProviderId = paymentProviderId;
     }
 
-    public Set<Item> getLineItems() {
+    public Set<Product> getLineItems() {
         return lineItems;
     }
 
-    public void setLineItems(Set<Item> lineItems) {
+    public void setLineItems(Set<Product> lineItems) {
         this.lineItems = lineItems;
     }
 

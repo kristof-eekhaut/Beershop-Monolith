@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-public class Item {
+public class Product {
 
     @Id
     private UUID id;
@@ -23,10 +23,10 @@ public class Item {
     @JoinColumn(name = "order_id", referencedColumnName = "id", nullable = false, updatable = false)
     private Order order;
 
-    public Item() {
+    public Product() {
     }
 
-    public Item(UUID id, UUID productId, String name, int quantity, BigDecimal price) {
+    public Product(UUID id, UUID productId, String name, int quantity, BigDecimal price) {
         this.id = UUID.randomUUID();
         this.productId = productId;
         this.name = name;
