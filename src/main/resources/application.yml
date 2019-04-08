@@ -6,6 +6,9 @@ spring:
     driver-class-name: org.h2.Driver
   flyway.locations: classpath:/db/migration/{vendor}
   jpa:
-    generate-ddl: false
+    generate-ddl: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop
+  flyway:
+    enabled: false
+

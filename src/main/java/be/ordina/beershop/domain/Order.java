@@ -1,14 +1,19 @@
 package be.ordina.beershop.domain;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -16,15 +21,27 @@ import java.util.UUID;
 public class Order {
 
     @Id
+    @Column(name = "ID")
     private UUID id;
-    private UUID accountId;
+
+    @ManyToOne
+    @JoinColumn(name = "CUSTOMER_ID")
+    private Customer customer;
+
+    @Column(name = "PAYMENT_PROVIDER_ID")
     private UUID paymentProviderId;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
-    private Set<Product> lineItems;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LineItem> lineItems;
+
     @Enumerated(EnumType.STRING)
     private OrderStatus state;
+
+    @Column(name = "CREATED_ON")
     private LocalDateTime createdOn;
+
+    @Embedded
+    private Address address;
 
     public Order() {
     }
@@ -37,12 +54,12 @@ public class Order {
         this.id = id;
     }
 
-    public UUID getAccountId() {
-        return accountId;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setAccountId(UUID accountId) {
-        this.accountId = accountId;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
     public UUID getPaymentProviderId() {
@@ -53,11 +70,11 @@ public class Order {
         this.paymentProviderId = paymentProviderId;
     }
 
-    public Set<Product> getLineItems() {
+    public List<LineItem> getLineItems() {
         return lineItems;
     }
 
-    public void setLineItems(Set<Product> lineItems) {
+    public void setLineItems(List<LineItem> lineItems) {
         this.lineItems = lineItems;
     }
 
@@ -75,5 +92,13 @@ public class Order {
 
     public void setState(OrderStatus state) {
         this.state = state;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(final Address address) {
+        this.address = address;
     }
 }
