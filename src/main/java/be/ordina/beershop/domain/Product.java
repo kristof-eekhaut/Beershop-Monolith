@@ -1,34 +1,32 @@
 package be.ordina.beershop.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Entity
+@Entity(name = "PRODUCT")
 public class Product {
 
     @Id
+    @Column(name = "ID")
     private UUID id;
-    private UUID productId;
+    @Column(name = "NAME")
     private String name;
+    @Column(name = "QUANTITY")
     private int quantity;
+    @Column(name = "PRICE")
     private BigDecimal price;
+    @Column(name = "CREATED_ON")
     private LocalDateTime createdOn;
-
-    @ManyToOne
-    @JoinColumn(name = "order_id", referencedColumnName = "id", nullable = false, updatable = false)
-    private Order order;
 
     public Product() {
     }
 
-    public Product(UUID id, UUID productId, String name, int quantity, BigDecimal price) {
-        this.id = UUID.randomUUID();
-        this.productId = productId;
+    public Product(UUID id, String name, int quantity, BigDecimal price) {
+        this.id = id;
         this.name = name;
         this.quantity = quantity;
         this.price = price;
@@ -40,14 +38,6 @@ public class Product {
 
     public void setId(UUID id) {
         this.id = id;
-    }
-
-    public UUID getProductId() {
-        return productId;
-    }
-
-    public void setProductId(UUID productId) {
-        this.productId = productId;
     }
 
     public String getName() {
@@ -72,14 +62,6 @@ public class Product {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
-    }
-
-    public Order getOrder() {
-        return order;
-    }
-
-    public void setOrder(Order order) {
-        this.order = order;
     }
 
     public LocalDateTime getCreatedOn() {
