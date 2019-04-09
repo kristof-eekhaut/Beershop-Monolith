@@ -34,7 +34,11 @@ public class ProductController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateProduct(@PathVariable("id") UUID productId, @RequestBody Product product) {
-        productRepository.save(product);
+        productRepository.findById(productId)
+                         .ifPresent(originalProduct -> {
+                             originalProduct.setQuantity(product.getQuantity());
+                             productRepository.save(originalProduct);
+                         });
         return ResponseEntity.ok().build();
     }
 
