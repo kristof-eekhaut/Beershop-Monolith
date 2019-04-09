@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -43,6 +44,9 @@ public class Order {
     @Embedded
     private Address address;
 
+    @Column(name = "SHIPMENT_ID")
+    private String shipmentId;
+
     public Order() {
     }
 
@@ -71,7 +75,7 @@ public class Order {
     }
 
     public List<LineItem> getLineItems() {
-        return lineItems;
+        return new ArrayList<>(lineItems);
     }
 
     public void setLineItems(List<LineItem> lineItems) {
@@ -100,5 +104,13 @@ public class Order {
 
     public void setAddress(final Address address) {
         this.address = address;
+    }
+
+    public void setShipmentId(final String shipmentId) {
+        this.shipmentId = shipmentId;
+    }
+
+    public String getShipmentId() {
+        return shipmentId;
     }
 }
