@@ -130,11 +130,11 @@ public class BeerShopService {
 
     public void createItemInShoppingCart(final UUID customerId, final LineItem lineItem) {
         final Customer customer = customerRepository.findById(customerId).get();
+        initializeLineItem(lineItem);
         if (customerIsOldEnoughForProduct(lineItem, customer)) {
             throw new RuntimeException("No underage drinking allowed");
         }
         final ShoppingCart shoppingCart = customer.getShoppingCart();
-        initializeLineItem(lineItem);
         shoppingCart.addLineItem(lineItem);
         customerRepository.save(customer);
     }

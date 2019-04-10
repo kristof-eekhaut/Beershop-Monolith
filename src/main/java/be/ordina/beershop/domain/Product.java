@@ -10,6 +10,9 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.Valid;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -23,19 +26,25 @@ public class Product {
     @Column(name = "ID")
     private UUID id;
     @Column(name = "NAME")
+    @NotNull
     private String name;
     @Column(name = "QUANTITY")
     private int quantity;
     @Column(name = "PRICE")
+    @NotNull
+    @DecimalMin(value = "0.01")
     private BigDecimal price;
     @Column(name = "CREATED_ON")
+    @JsonIgnore
     private LocalDateTime createdOn;
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Discount> discounts = new ArrayList<>();
     @Column(name = "ALCOHOL_PERCENTAGE")
+    @NotNull
     private BigDecimal alcoholPercentage;
 
     @Embedded
+    @Valid
     private Weight weight;
 
     public Product() {
@@ -70,6 +79,7 @@ public class Product {
         return quantity;
     }
 
+    @JsonProperty
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }

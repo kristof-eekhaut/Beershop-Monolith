@@ -2,18 +2,23 @@ package be.ordina.beershop.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
 @Embeddable
 public class Address {
 
     @Column(name = "STREET")
+    @NotBlank
     private String street;
     @Column(name = "NUMBER")
+    @NotBlank
     private String number;
     @Column(name = "POSTAL_CODE")
+    @NotBlank
     private String postalCode;
     @Column(name = "COUNTRY")
+    @NotBlank
     private String country;
 
     public String getStreet() {

@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+import java.net.URI;
 import java.util.UUID;
 
 import static org.springframework.data.domain.Sort.Direction.DESC;
@@ -28,12 +30,17 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Void> createProduct(@RequestBody Product product) {
+        final UUID id = UUID.randomUUID();
+        product.setId(id);
         productRepository.save(product);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.created(URI.create("/products/" + id)).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateProduct(@PathVariable("id") UUID productId, @RequestBody Product product) {
+    public ResponseEntity<?> updateProduct(@PathVariable("id") UUID productId, @RequestBody @Valid Product product) {
+        if (product.getQuantity() == 0) {
+            return ResponseEntity.badRequest().body("Quantity may not be 0");
+        }
         productRepository.findById(productId)
                          .ifPresent(originalProduct -> {
                              originalProduct.setQuantity(product.getQuantity());

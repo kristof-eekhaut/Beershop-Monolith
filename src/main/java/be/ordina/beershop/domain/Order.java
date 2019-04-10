@@ -29,9 +29,6 @@ public class Order {
     @JoinColumn(name = "CUSTOMER_ID")
     private Customer customer;
 
-    @Column(name = "PAYMENT_PROVIDER_ID")
-    private UUID paymentProviderId;
-
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LineItem> lineItems;
 
@@ -64,14 +61,6 @@ public class Order {
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
-    }
-
-    public UUID getPaymentProviderId() {
-        return paymentProviderId;
-    }
-
-    public void setPaymentProviderId(UUID paymentProviderId) {
-        this.paymentProviderId = paymentProviderId;
     }
 
     public List<LineItem> getLineItems() {

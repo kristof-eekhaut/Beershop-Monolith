@@ -1,11 +1,14 @@
-package be.ordina.beershop;
+package be.ordina.beershop.integrationTests;
 
+import be.ordina.beershop.controller.OrderResource;
 import be.ordina.beershop.domain.Address;
 import be.ordina.beershop.domain.Customer;
 import be.ordina.beershop.domain.LineItem;
 import be.ordina.beershop.domain.Order;
 import be.ordina.beershop.domain.OrderStatus;
 import be.ordina.beershop.domain.Product;
+import be.ordina.beershop.domain.Weight;
+import be.ordina.beershop.domain.WeightUnit;
 import be.ordina.beershop.repository.CustomerRepository;
 import be.ordina.beershop.repository.OrderRepository;
 import be.ordina.beershop.repository.ProductRepository;
@@ -27,7 +30,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.util.Collections;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -70,7 +73,6 @@ public class IntegrationTests {
             @Override
             protected void doInTransactionWithoutResult(final TransactionStatus transactionStatus) {
                 createCustomer();
-                createProduct();
             }
         });
     }
@@ -81,20 +83,37 @@ public class IntegrationTests {
         final Customer customer = new Customer();
         customer.setId(customerId);
 
-        final Product karmeliet = new Product();
-        karmeliet.setId(productId);
+        final Weight weight = new Weight();
+        weight.setAmount(new BigDecimal("100.00"));
+        weight.setUnit(WeightUnit.GRAM);
+
+        final ProductDto karmeliet = new ProductDto(
+                "Karmeliet Tripel", 10, "1.20", "7.5", new WeightDto("100", "GRAM"));
+
+        mockMvc.perform(
+                post("/products")
+                        .content(objectMapper.writeValueAsString(karmeliet))
+                        .contentType(MediaType.APPLICATION_JSON))
+               .andDo(print())
+               .andExpect(status().isCreated());
+
+        final Product product = new Product();
+        product.setId(productRepository.findAll().get(0).getId());
 
         final LineItem lineItem = new LineItem();
-        lineItem.setProduct(karmeliet);
+        lineItem.setProduct(product);
         lineItem.setQuantity(3);
 
-        final Order order = new Order();
-        order.setCustomer(customer);
-        order.setLineItems(Collections.singletonList(lineItem));
+        mockMvc.perform(
+                post("/customers/" + customerId + "/shopping-cart/line-items")
+                        .content(objectMapper.writeValueAsString(lineItem))
+                        .contentType(MediaType.APPLICATION_JSON))
+               .andDo(print())
+               .andExpect(status().isOk());
 
         mockMvc.perform(
                 post("/orders")
-                        .content(objectMapper.writeValueAsString(order))
+                        .content(objectMapper.writeValueAsString(new OrderResource(customerId)))
                         .contentType(MediaType.APPLICATION_JSON))
                .andDo(print())
                .andExpect(status().isCreated());
@@ -108,28 +127,17 @@ public class IntegrationTests {
             assertThat(savedOrder.getLineItems().size()).isEqualTo(1);
             assertThat(savedOrder.getLineItems().get(0)).satisfies(lineItem1 -> {
                 assertThat(lineItem1.getQuantity()).isEqualTo(3);
-                assertThat(lineItem1.getPrice()).isEqualTo(new BigDecimal("3.00"));
+                assertThat(lineItem1.getPrice()).isEqualTo(new BigDecimal("3.60"));
             });
         });
-
-    }
-
-    @Test
-    public void testCatalogue() throws Exception {
         mockMvc.perform(
                 get("/products"))
                .andDo(print())
                .andExpect(status().isOk())
-               .andExpect(jsonPath("$.content[0].name").value("Karmeliet"))
-               .andExpect(jsonPath("$.content[0].price").value(1.00f))
-               .andExpect(jsonPath("$.content[0].alcoholPercentage").value(14.2f))
-               .andExpect(jsonPath("$.content[0].quantityIndicator").value("SOLD_OUT"));
-    }
-
-    private void createProduct() {
-        productId = UUID.randomUUID();
-        final Product product = new Product(productId, "Karmeliet", 0, new BigDecimal("1.00"), new BigDecimal("14.2"));
-        productRepository.save(product);
+               .andExpect(jsonPath("$.content[0].name").value("Karmeliet Tripel"))
+               .andExpect(jsonPath("$.content[0].price").value(1.20f))
+               .andExpect(jsonPath("$.content[0].alcoholPercentage").value(7.5f))
+               .andExpect(jsonPath("$.content[0].quantityIndicator").value("PLENTY_AVAILABLE"));
     }
 
     private void createCustomer() {
@@ -144,6 +152,7 @@ public class IntegrationTests {
         customer.setId(customerId);
         customer.setName("Joske Vermeulen");
         customer.setAddress(address);
+        customer.setBirthDate(LocalDate.of(1991, 10, 4));
         customerRepository.save(customer);
     }
 

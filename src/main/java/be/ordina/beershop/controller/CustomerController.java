@@ -27,7 +27,7 @@ public class CustomerController {
     @Autowired
     private ProductRepository productRepository;
 
-    @PostMapping("/{customerId}/shoppingCart/items")
+    @PostMapping("/{customerId}/shopping-cart/line-items")
     public ResponseEntity<?> addItemToShoppingCart(@PathVariable UUID customerId, @RequestBody LineItem lineItem) {
         if (customerRepository.findById(customerId).isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -41,7 +41,7 @@ public class CustomerController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{customerId}/shoppingCart/items/{lineItemId}")
+    @PutMapping("/{customerId}/shopping-cart/line-items/{lineItemId}")
     public ResponseEntity<Void> updateItemInShoppingCart(@PathVariable UUID customerId, @PathVariable String lineItemId, @RequestBody LineItem lineItem) {
         if (customerRepository.findById(customerId).isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -51,7 +51,7 @@ public class CustomerController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{customerId}/shoppingCart/items/{lineItemId}")
+    @DeleteMapping("/{customerId}/shopping-cart/line-items/{lineItemId}")
     public ResponseEntity<Void> deleteItemFromShoppingCart(@PathVariable UUID customerId, @PathVariable UUID lineItemId) {
         if (customerRepository.findById(customerId).isEmpty()) {
             return ResponseEntity.notFound().build();

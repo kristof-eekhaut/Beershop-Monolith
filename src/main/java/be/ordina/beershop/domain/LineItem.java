@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -16,9 +18,11 @@ public class LineItem {
 
     @JoinColumn(name = "PRODUCT_ID")
     @OneToOne
+    @NotNull
     private Product product;
 
     @Column(name = "QUANTITY")
+    @Min(value = 1)
     private int quantity;
 
     @Column(name = "PRICE")

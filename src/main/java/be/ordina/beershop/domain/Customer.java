@@ -7,6 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -18,9 +21,11 @@ public class Customer {
     private UUID id;
 
     @Column(name = "NAME")
+    @NotBlank
     private String name;
 
     @Column(name = "BIRTH_DATE")
+    @NotNull
     private LocalDate birthDate;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -28,6 +33,7 @@ public class Customer {
     private ShoppingCart shoppingCart = new ShoppingCart();
 
     @Embedded
+    @Valid
     private Address address;
 
     public UUID getId() {
