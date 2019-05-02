@@ -1,8 +1,10 @@
 package be.ordina.beershop.controller;
 
+import be.ordina.beershop.domain.Customer;
 import be.ordina.beershop.domain.Order;
-import be.ordina.beershop.domain.OrderStatus;
+import be.ordina.beershop.repository.CustomerRepository;
 import be.ordina.beershop.repository.OrderRepository;
+import be.ordina.beershop.service.BeerShopService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -23,13 +24,20 @@ public class OrderController {
 
     @Autowired
     private OrderRepository repository;
+    @Autowired
+    private CustomerRepository customerRepository;
+    @Autowired
+    private BeerShopService beerShopService;
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody Order order) {
-        order.setId(UUID.randomUUID());
-        order.setState(OrderStatus.ORDER_CREATED);
-        order.setCreatedOn(LocalDateTime.now());
-        repository.save(order);
+    public ResponseEntity<?> create(@RequestBody OrderResource orderResource) {
+
+        final Optional<Customer> maybeCustomer = customerRepository.findById(orderResource.getCustomerId());
+        if(!maybeCustomer.isPresent()) {
+            return ResponseEntity.badRequest().body("Unknown customer");
+        }
+
+        final Order order = beerShopService.createOrder(orderResource);
         return ResponseEntity.created(URI.create("/orders/" + order.getId())).build();
     }
 

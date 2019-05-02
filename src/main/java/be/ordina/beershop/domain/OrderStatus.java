@@ -1,7 +1,9 @@
 package be.ordina.beershop.domain;
 
 public enum OrderStatus {
-    ORDER_CREATED,
-    ORDER_SUCCEEDED,
+    CREATED,
+    PAID,
+    SHIPMENT_REQUESTED,
+    DELIVERED,
     ORDER_FAILED
 }

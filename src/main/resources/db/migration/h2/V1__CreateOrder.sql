@@ -9,15 +9,27 @@ CREATE TABLE orders
   created_on          TIMESTAMP        NOT NULL DEFAULT now()
 );
 
-DROP TABLE IF EXISTS item;
+DROP TABLE IF EXISTS product;
 
-CREATE TABLE item
+CREATE TABLE product
 (
   id         UUID PRIMARY KEY NOT NULL,
-  product_id UUID             NOT NULL,
-  order_id   UUID             NOT NULL,
   name       VARCHAR(255)     NOT NULL,
   quantity   INTEGER          NOT NULL,
   price      NUMERIC(19, 2)   NOT NULL,
   created_on TIMESTAMP        NOT NULL DEFAULT now()
 );
+
+DROP TABLE IF EXISTS order_product;
+
+CREATE TABLE order_product
+(
+  id          UUID PRIMARY KEY NOT NULL,
+  orderId     UUID             NOT NULL,
+  productId   UUID             NOT NULL,
+  quantity    INTEGER          NOT NULL,
+  total_price NUMERIC(19, 2)   NOT NULL,
+  created_on  TIMESTAMP        NOT NULL DEFAULT now(),
+  FOREIGN KEY (orderId) REFERENCES orders (id),
+  FOREIGN KEY (productId) REFERENCES product (id)
+)
