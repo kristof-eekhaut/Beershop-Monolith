@@ -9,6 +9,10 @@ import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
+import static org.apache.commons.lang3.builder.EqualsBuilder.reflectionEquals;
+import static org.apache.commons.lang3.builder.HashCodeBuilder.reflectionHashCode;
+import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
+
 @Embeddable
 public class Weight {
 
@@ -43,5 +47,27 @@ public class Weight {
             case KILO_GRAM: return amount.multiply(new BigDecimal("1000"));
             default: throw new RuntimeException("Unit unknown");
         }
+    }
+
+    @Override
+    public String toString() {
+        return reflectionToString(this);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return reflectionEquals(this, obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return reflectionHashCode(this);
+    }
+
+    public static Weight weight(BigDecimal amount, WeightUnit unit) {
+        Weight weight = new Weight();
+        weight.setAmount(amount);
+        weight.setUnit(unit);
+        return weight;
     }
 }

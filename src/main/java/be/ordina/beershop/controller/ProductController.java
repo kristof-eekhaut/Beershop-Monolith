@@ -29,7 +29,7 @@ public class ProductController {
     private ProductRepository productRepository;
 
     @PostMapping
-    public ResponseEntity<Void> createProduct(@RequestBody Product product) {
+    public ResponseEntity<Void> createProduct(@RequestBody @Valid Product product) {
         final UUID id = UUID.randomUUID();
         product.setId(id);
         productRepository.save(product);

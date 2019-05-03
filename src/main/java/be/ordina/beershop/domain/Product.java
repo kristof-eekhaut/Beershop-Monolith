@@ -58,6 +58,17 @@ public class Product {
         this.alcoholPercentage = alcoholPercentage;
     }
 
+    private Product(Builder builder) {
+        setId(builder.id);
+        setName(builder.name);
+        setQuantity(builder.quantity);
+        setPrice(builder.price);
+        setCreatedOn(builder.createdOn);
+        discounts = builder.discounts;
+        setAlcoholPercentage(builder.alcoholPercentage);
+        setWeight(builder.weight);
+    }
+
     public UUID getId() {
         return id;
     }
@@ -132,6 +143,68 @@ public class Product {
             return QuantityIndicator.ALMOST_SOLD_OUT;
         } else {
             return QuantityIndicator.PLENTY_AVAILABLE;
+        }
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private UUID id;
+        private String name;
+        private int quantity;
+        private BigDecimal price;
+        private LocalDateTime createdOn;
+        private List<Discount> discounts = new ArrayList<>();
+        private BigDecimal alcoholPercentage;
+        private Weight weight;
+
+        private Builder() {
+        }
+
+        public Builder id(UUID id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder quantity(int quantity) {
+            this.quantity = quantity;
+            return this;
+        }
+
+        public Builder price(BigDecimal price) {
+            this.price = price;
+            return this;
+        }
+
+        public Builder createdOn(LocalDateTime createdOn) {
+            this.createdOn = createdOn;
+            return this;
+        }
+
+        public Builder discounts(List<Discount> discounts) {
+            this.discounts = discounts;
+            return this;
+        }
+
+        public Builder alcoholPercentage(BigDecimal alcoholPercentage) {
+            this.alcoholPercentage = alcoholPercentage;
+            return this;
+        }
+
+        public Builder weight(Weight weight) {
+            this.weight = weight;
+            return this;
+        }
+
+        public Product build() {
+            return new Product(this);
         }
     }
 }
