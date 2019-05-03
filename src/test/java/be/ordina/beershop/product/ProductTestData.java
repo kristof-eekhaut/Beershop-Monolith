@@ -11,7 +11,7 @@ import static be.ordina.beershop.domain.Weight.weight;
 
 public class ProductTestData {
 
-    public static Product karmeliet() {
+    public static Product.Builder karmeliet() {
         return Product.builder()
                 .id(UUID.randomUUID())
                 .name("Karmeliet Tripel")
@@ -19,11 +19,10 @@ public class ProductTestData {
                 .price(new BigDecimal("1.20"))
                 .alcoholPercentage(new BigDecimal("7.5"))
                 .weight(weight(new BigDecimal("100"), WeightUnit.GRAM))
-                .createdOn(LocalDateTime.now())
-                .build();
+                .createdOn(LocalDateTime.now());
     }
 
-    public static Product westmalle() {
+    public static Product.Builder westmalle() {
         return Product.builder()
                 .id(UUID.randomUUID())
                 .name("Westmalle Tripel")
@@ -31,11 +30,10 @@ public class ProductTestData {
                 .price(new BigDecimal("1.30"))
                 .alcoholPercentage(new BigDecimal("9.5"))
                 .weight(weight(new BigDecimal("120"), WeightUnit.GRAM))
-                .createdOn(LocalDateTime.now())
-                .build();
+                .createdOn(LocalDateTime.now());
     }
 
-    public static Product westvleteren() {
+    public static Product.Builder westvleteren() {
         return Product.builder()
                 .id(UUID.randomUUID())
                 .name("Westvleteren Blonde")
@@ -43,7 +41,6 @@ public class ProductTestData {
                 .price(new BigDecimal("3.20"))
                 .alcoholPercentage(new BigDecimal("5.8"))
                 .weight(weight(new BigDecimal("90"), WeightUnit.GRAM))
-                .createdOn(LocalDateTime.now())
-                .build();
+                .createdOn(LocalDateTime.now());
     }
 }

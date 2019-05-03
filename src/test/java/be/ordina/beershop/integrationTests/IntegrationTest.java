@@ -1,6 +1,10 @@
 package be.ordina.beershop.integrationTests;
 
+import be.ordina.beershop.domain.Customer;
+import be.ordina.beershop.domain.Order;
 import be.ordina.beershop.domain.Product;
+import be.ordina.beershop.repository.CustomerRepository;
+import be.ordina.beershop.repository.OrderRepository;
 import be.ordina.beershop.repository.ProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
@@ -27,6 +31,10 @@ public abstract class IntegrationTest {
 
     @Autowired
     protected ProductRepository productRepository;
+    @Autowired
+    protected OrderRepository orderRepository;
+    @Autowired
+    protected CustomerRepository customerRepository;
 
     @Before
     public void setUp() {
@@ -40,6 +48,14 @@ public abstract class IntegrationTest {
 
     protected Product persistProduct(Product product) {
         return runInTransaction(() -> productRepository.save(product));
+    }
+
+    protected Order persistOrder(Order order) {
+        return runInTransaction(() -> orderRepository.save(order));
+    }
+
+    protected Customer persistCustomer(Customer customer) {
+        return runInTransaction(() -> customerRepository.save(customer));
     }
 
     protected void runInTransaction(RunnableWithException runnable) {
@@ -66,6 +82,8 @@ public abstract class IntegrationTest {
     }
 
     private void clearDataBase() {
+        orderRepository.deleteAll();
+        customerRepository.deleteAll();
         productRepository.deleteAll();
     }
 

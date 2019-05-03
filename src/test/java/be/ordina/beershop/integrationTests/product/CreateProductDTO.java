@@ -2,7 +2,7 @@ package be.ordina.beershop.integrationTests.product;
 
 import be.ordina.beershop.integrationTests.WeightDto;
 
-public class CreateProductDTO {
+class CreateProductDTO {
 
     private final String name;
     private final int quantity;

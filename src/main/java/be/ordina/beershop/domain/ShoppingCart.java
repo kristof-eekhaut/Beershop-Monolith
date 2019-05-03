@@ -24,6 +24,11 @@ public class ShoppingCart {
         id = UUID.randomUUID();
     }
 
+    private ShoppingCart(Builder builder) {
+        setId(builder.id);
+        setLineItems(builder.lineItems);
+    }
+
     public UUID getId() {
         return id;
     }
@@ -57,5 +62,36 @@ public class ShoppingCart {
 
     public void clear() {
         this.lineItems = new ArrayList<>();
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private UUID id;
+        private List<LineItem> lineItems = new ArrayList<>();
+
+        private Builder() {
+        }
+
+        public Builder id(UUID id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder lineItems(List<LineItem> lineItems) {
+            this.lineItems = lineItems;
+            return this;
+        }
+
+        public Builder lineItem(LineItem lineItem) {
+            this.lineItems.add(lineItem);
+            return this;
+        }
+
+        public ShoppingCart build() {
+            return new ShoppingCart(this);
+        }
     }
 }

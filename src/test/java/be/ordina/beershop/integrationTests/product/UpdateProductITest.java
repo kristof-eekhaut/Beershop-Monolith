@@ -22,16 +22,16 @@ public class UpdateProductITest extends IntegrationTest {
     @Test
     public void givenProduct_whenUpdatingProductQuantity_thenProductIsUpdated() throws Exception {
 
-        Product karmeliet = persistProduct(ProductTestData.karmeliet());
-        persistProduct(ProductTestData.westmalle());
-        persistProduct(ProductTestData.westvleteren());
+        Product karmeliet = persistProduct(ProductTestData.karmeliet().build());
+        persistProduct(ProductTestData.westmalle().build());
+        persistProduct(ProductTestData.westvleteren().build());
 
         final UpdateProductDTO updateProduct = defaultUpdateProductDTO()
                 .quantity(15)
                 .build();
 
         mockMvc.perform(
-                put("/products/" + karmeliet.getId().toString())
+                put("/products/" + karmeliet.getId())
                         .content(objectMapper.writeValueAsString(updateProduct))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())

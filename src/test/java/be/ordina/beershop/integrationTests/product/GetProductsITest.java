@@ -26,7 +26,7 @@ public class GetProductsITest extends IntegrationTest {
     @Test
     public void whenOneProductExists_thenPageWith1Item() throws Exception {
 
-        persistProduct(ProductTestData.karmeliet());
+        persistProduct(ProductTestData.karmeliet().build());
 
         mockMvc.perform(
                 get("/products"))
@@ -44,9 +44,9 @@ public class GetProductsITest extends IntegrationTest {
     @Test
     public void whenMultipleProductsExist_thenPageWithMultipleItems() throws Exception {
 
-        persistProduct(ProductTestData.karmeliet());
-        persistProduct(ProductTestData.westmalle());
-        persistProduct(ProductTestData.westvleteren());
+        persistProduct(ProductTestData.karmeliet().build());
+        persistProduct(ProductTestData.westmalle().build());
+        persistProduct(ProductTestData.westvleteren().build());
 
         mockMvc.perform(
                 get("/products"))

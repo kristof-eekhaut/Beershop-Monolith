@@ -28,6 +28,17 @@ public class LineItem {
     @Column(name = "PRICE")
     private BigDecimal price;
 
+    public LineItem() {
+        // For hibernate
+    }
+
+    private LineItem(Builder builder) {
+        setId(builder.id);
+        setProduct(builder.product);
+        setQuantity(builder.quantity);
+        setPrice(builder.price);
+    }
+
     public void setId(final UUID id) {
         this.id = id;
     }
@@ -60,5 +71,41 @@ public class LineItem {
         this.price = price;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
 
+    public static final class Builder {
+        private UUID id;
+        private Product product;
+        private int quantity;
+        private BigDecimal price;
+
+        private Builder() {
+        }
+
+        public Builder id(UUID id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder product(@NotNull Product product) {
+            this.product = product;
+            return this;
+        }
+
+        public Builder quantity(@Min(value = 1) int quantity) {
+            this.quantity = quantity;
+            return this;
+        }
+
+        public Builder price(BigDecimal price) {
+            this.price = price;
+            return this;
+        }
+
+        public LineItem build() {
+            return new LineItem(this);
+        }
+    }
 }

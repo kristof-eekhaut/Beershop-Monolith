@@ -45,11 +45,10 @@ public class ProductMatcher extends BaseEntityMatcher<Product> {
 
     @Override
     protected void describeToEntity(Description description, Product product) {
-        appendField(description, "id", product.getId()).appendText(",");
         appendField(description, "name", product.getName()).appendText(",");
         appendField(description, "quantity", product.getQuantity()).appendText(",");
         appendField(description, "price", product.getPrice()).appendText(",");
-        appendField(description, "createdOn", product.getCreatedOn()).appendText(",");
+//        appendField(description, "createdOn", product.getCreatedOn()).appendText(",");
         appendField(description, "alcoholPercentage", product.getAlcoholPercentage()).appendText(",");
         appendField(description, "weight", product.getWeight()).appendText(",");
         appendDescriptionOf(description, "discounts", matchingDiscounts(product));

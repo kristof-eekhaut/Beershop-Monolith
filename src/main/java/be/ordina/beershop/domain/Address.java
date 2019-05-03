@@ -21,6 +21,17 @@ public class Address {
     @NotBlank
     private String country;
 
+    public Address() {
+        // For Hibernate
+    }
+
+    private Address(Builder builder) {
+        setStreet(builder.street);
+        setNumber(builder.number);
+        setPostalCode(builder.postalCode);
+        setCountry(builder.country);
+    }
+
     public String getStreet() {
         return street;
     }
@@ -67,5 +78,43 @@ public class Address {
 
     public void setCountry(final String country) {
         this.country = country;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private @NotBlank String street;
+        private @NotBlank String number;
+        private @NotBlank String postalCode;
+        private @NotBlank String country;
+
+        private Builder() {
+        }
+
+        public Builder street(@NotBlank String street) {
+            this.street = street;
+            return this;
+        }
+
+        public Builder number(@NotBlank String number) {
+            this.number = number;
+            return this;
+        }
+
+        public Builder postalCode(@NotBlank String postalCode) {
+            this.postalCode = postalCode;
+            return this;
+        }
+
+        public Builder country(@NotBlank String country) {
+            this.country = country;
+            return this;
+        }
+
+        public Address build() {
+            return new Address(this);
+        }
     }
 }
