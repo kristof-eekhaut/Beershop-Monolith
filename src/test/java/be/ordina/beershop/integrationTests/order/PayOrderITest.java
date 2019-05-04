@@ -14,7 +14,7 @@ import org.springframework.http.MediaType;
 import static be.ordina.beershop.order.OrderMatcher.matchesOrder;
 import static be.ordina.beershop.shoppingcart.ShoppingCartTestData.cartWithItem;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -34,7 +34,7 @@ public class PayOrderITest extends IntegrationTest {
         final PayOrderDTO payOrderDTO = new PayOrderDTO(order.getId().toString());
 
         mockMvc.perform(
-                post("/payments")
+                patch("/orders/" + order.getId() + "/pay")
                         .content(objectMapper.writeValueAsString(payOrderDTO))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())

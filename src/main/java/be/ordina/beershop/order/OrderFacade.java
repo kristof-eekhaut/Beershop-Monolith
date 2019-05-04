@@ -10,4 +10,6 @@ public interface OrderFacade {
     UUID createOrder(CreateOrder createOrder);
 
     Optional<Order> getOrder(UUID id);
+
+    void payOrder(UUID id);
 }

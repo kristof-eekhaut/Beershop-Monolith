@@ -32,4 +32,10 @@ class OrderController {
                 .map(order -> ResponseEntity.ok().body(order))
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @PatchMapping("/{id}/pay")
+    public ResponseEntity<Void> payOrder(@PathVariable("id") UUID id) {
+        orderFacade.payOrder(id);
+        return ResponseEntity.ok().build();
+    }
 }

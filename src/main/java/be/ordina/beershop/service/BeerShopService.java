@@ -1,10 +1,10 @@
 package be.ordina.beershop.service;
 
-import be.ordina.beershop.controller.PaymentResource;
 import be.ordina.beershop.controller.ShipmentResource;
 import be.ordina.beershop.domain.*;
 import be.ordina.beershop.order.CreateOrder;
 import be.ordina.beershop.order.CustomerNotFoundException;
+import be.ordina.beershop.order.OrderNotFoundException;
 import be.ordina.beershop.repository.CustomerRepository;
 import be.ordina.beershop.repository.OrderRepository;
 import be.ordina.beershop.repository.ProductRepository;
@@ -102,9 +102,10 @@ public class BeerShopService {
                        });
     }
 
-    public void payOrder(final PaymentResource paymentResource) {
-        orderRepository.findById(paymentResource.getOrderId())
-                       .ifPresent(order -> updateOrderStatus(order, OrderStatus.PAID));
+    public void payOrder(final UUID orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException(orderId));
+        updateOrderStatus(order, OrderStatus.PAID);
     }
 
     private void updateStock(final Order order) {
