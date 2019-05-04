@@ -18,8 +18,7 @@ public class DiscountMatcher extends BaseEntityMatcher<Discount> {
     protected final boolean matchesSafely(Discount other) {
         return isEqual(this.objectToMatch.getPercentage(), other.getPercentage())
                 && isEqual(this.objectToMatch.getStartDate(), other.getStartDate())
-                && isEqual(this.objectToMatch.getEndDate(), other.getEndDate())
-                && isEqual(this.objectToMatch.getProductId(), other.getProductId());
+                && isEqual(this.objectToMatch.getEndDate(), other.getEndDate());
     }
 
     @Override
@@ -28,6 +27,5 @@ public class DiscountMatcher extends BaseEntityMatcher<Discount> {
         appendField(description, "percentage", discount.getPercentage()).appendText(",");
         appendField(description, "startDate", discount.getStartDate()).appendText(",");
         appendField(description, "endDate", discount.getEndDate()).appendText(",");
-        appendField(description, "productId", discount.getProductId());
     }
 }

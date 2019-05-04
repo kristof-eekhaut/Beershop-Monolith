@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
+import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
+
 @Entity(name = "DISCOUNT")
 public class Discount {
 
@@ -25,9 +27,6 @@ public class Discount {
     @Column(name = "END_DATE")
     private ZonedDateTime endDate;
 
-    @Column(name = "PRODUCT_ID", insertable = false, updatable = false)
-    private UUID productId;
-
     protected Discount() {
         // hibernate
     }
@@ -43,7 +42,6 @@ public class Discount {
         setPercentage(builder.percentage);
         setStartDate(builder.startDate);
         setEndDate(builder.endDate);
-        setProductId(builder.productId);
     }
 
     public UUID getId() {
@@ -78,12 +76,9 @@ public class Discount {
         this.endDate = endDate;
     }
 
-    public UUID getProductId() {
-        return productId;
-    }
-
-    public void setProductId(final UUID productId) {
-        this.productId = productId;
+    @Override
+    public String toString() {
+        return reflectionToString(this);
     }
 
     public static Builder builder() {
@@ -95,7 +90,6 @@ public class Discount {
         private BigDecimal percentage;
         private ZonedDateTime startDate;
         private ZonedDateTime endDate;
-        private UUID productId;
 
         private Builder() {
         }
@@ -117,11 +111,6 @@ public class Discount {
 
         public Builder endDate(ZonedDateTime endDate) {
             this.endDate = endDate;
-            return this;
-        }
-
-        public Builder productId(UUID productId) {
-            this.productId = productId;
             return this;
         }
 

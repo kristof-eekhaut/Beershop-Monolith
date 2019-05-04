@@ -1,18 +1,22 @@
 package be.ordina.beershop.shoppingcart;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.UUID;
 
+import static java.util.Objects.requireNonNull;
+
 @RestController
 @RequestMapping("/customers/{customerId}/shopping-cart")
-public class ShoppingCartController {
+class ShoppingCartController {
 
-    @Autowired
-    private ShoppingCartFacade shoppingCartFacade;
+    private final ShoppingCartFacade shoppingCartFacade;
+
+    ShoppingCartController(ShoppingCartFacade shoppingCartFacade) {
+        this.shoppingCartFacade = requireNonNull(shoppingCartFacade);
+    }
 
     @PatchMapping("/add-product")
     public ResponseEntity<?> addProductToShoppingCart(@PathVariable UUID customerId, @RequestBody @Valid AddProductToShoppingCart addProductToShoppingCart) {
