@@ -38,6 +38,14 @@ public class Discount {
         this.endDate = endDate;
     }
 
+    private Discount(Builder builder) {
+        setId(builder.id);
+        setPercentage(builder.percentage);
+        setStartDate(builder.startDate);
+        setEndDate(builder.endDate);
+        setProductId(builder.productId);
+    }
+
     public UUID getId() {
         return id;
     }
@@ -76,5 +84,49 @@ public class Discount {
 
     public void setProductId(final UUID productId) {
         this.productId = productId;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private UUID id;
+        private BigDecimal percentage;
+        private ZonedDateTime startDate;
+        private ZonedDateTime endDate;
+        private UUID productId;
+
+        private Builder() {
+        }
+
+        public Builder id(UUID id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder percentage(BigDecimal percentage) {
+            this.percentage = percentage;
+            return this;
+        }
+
+        public Builder startDate(ZonedDateTime startDate) {
+            this.startDate = startDate;
+            return this;
+        }
+
+        public Builder endDate(ZonedDateTime endDate) {
+            this.endDate = endDate;
+            return this;
+        }
+
+        public Builder productId(UUID productId) {
+            this.productId = productId;
+            return this;
+        }
+
+        public Discount build() {
+            return new Discount(this);
+        }
     }
 }
