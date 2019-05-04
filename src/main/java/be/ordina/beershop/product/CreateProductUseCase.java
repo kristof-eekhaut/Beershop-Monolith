@@ -12,7 +12,7 @@ import static java.util.Objects.requireNonNull;
 @Component
 class CreateProductUseCase {
 
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
     CreateProductUseCase(ProductRepository productRepository) {
         this.productRepository = requireNonNull(productRepository);

@@ -11,7 +11,7 @@ import static java.util.Objects.requireNonNull;
 @Component
 class UpdateProductStockUseCase {
 
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
     UpdateProductStockUseCase(ProductRepository productRepository) {
         this.productRepository = requireNonNull(productRepository);
