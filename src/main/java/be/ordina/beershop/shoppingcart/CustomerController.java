@@ -1,19 +1,13 @@
-package be.ordina.beershop.controller;
+package be.ordina.beershop.shoppingcart;
 
 import be.ordina.beershop.domain.LineItem;
 import be.ordina.beershop.repository.CustomerRepository;
-import be.ordina.beershop.repository.ProductRepository;
 import be.ordina.beershop.service.BeerShopService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
@@ -24,20 +18,13 @@ public class CustomerController {
     private BeerShopService beerShopService;
     @Autowired
     private CustomerRepository customerRepository;
+
     @Autowired
-    private ProductRepository productRepository;
+    private ShoppingCartFacade shoppingCartFacade;
 
     @PostMapping("/{customerId}/shopping-cart/line-items")
-    public ResponseEntity<?> addItemToShoppingCart(@PathVariable UUID customerId, @RequestBody LineItem lineItem) {
-        if (customerRepository.findById(customerId).isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        final boolean productExists = productRepository.findById(lineItem.getProduct().getId()).isPresent();
-        if(!productExists) {
-            return ResponseEntity.badRequest().body("Unknown product");
-        }
-        beerShopService.createItemInShoppingCart(customerId, lineItem);
+    public ResponseEntity<?> addItemToShoppingCart(@PathVariable UUID customerId, @RequestBody @Valid AddItemToShoppingCart addItemToShoppingCart) {
+        shoppingCartFacade.addItem(customerId, addItemToShoppingCart);
         return ResponseEntity.ok().build();
     }
 

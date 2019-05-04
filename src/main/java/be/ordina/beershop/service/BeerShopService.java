@@ -8,6 +8,8 @@ import be.ordina.beershop.order.CustomerNotFoundException;
 import be.ordina.beershop.repository.CustomerRepository;
 import be.ordina.beershop.repository.OrderRepository;
 import be.ordina.beershop.repository.ProductRepository;
+import be.ordina.beershop.shoppingcart.AddItemToShoppingCart;
+import be.ordina.beershop.shoppingcart.ProductNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -124,8 +126,17 @@ public class BeerShopService {
                     .allMatch(lineItem -> lineItem.getQuantity() <= lineItem.getProduct().getQuantity());
     }
 
-    public void createItemInShoppingCart(final UUID customerId, final LineItem lineItem) {
-        final Customer customer = customerRepository.findById(customerId).get();
+    public void createItemInShoppingCart(final UUID customerId, final AddItemToShoppingCart addItemToShoppingCart) {
+        final Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new be.ordina.beershop.shoppingcart.CustomerNotFoundException(customerId));
+
+        LineItem lineItem = productRepository.findById(addItemToShoppingCart.getProductId())
+                .map(product -> LineItem.builder()
+                        .product(product)
+                        .quantity(addItemToShoppingCart.getQuantity())
+                        .build())
+                .orElseThrow(() -> new ProductNotFoundException(addItemToShoppingCart.getProductId()));
+
         initializeLineItem(lineItem);
         if (customerIsOldEnoughForProduct(lineItem, customer)) {
             throw new RuntimeException("No underage drinking allowed");

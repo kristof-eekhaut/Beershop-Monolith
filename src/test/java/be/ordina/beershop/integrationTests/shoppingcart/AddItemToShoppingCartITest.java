@@ -8,6 +8,7 @@ import be.ordina.beershop.domain.ShoppingCart;
 import be.ordina.beershop.integrationTests.IntegrationTest;
 import be.ordina.beershop.order.LineItemTestData;
 import be.ordina.beershop.product.ProductTestData;
+import be.ordina.beershop.shoppingcart.ShoppingCartErrorCode;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 
@@ -20,6 +21,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AddItemToShoppingCartITest extends IntegrationTest {
@@ -176,7 +178,8 @@ public class AddItemToShoppingCartITest extends IntegrationTest {
                         .content(objectMapper.writeValueAsString(addItemToShoppingCartDTO))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value(ShoppingCartErrorCode.PRODUCT_NOT_FOUND.name()));
 
         runInTransaction(() -> {
             Customer updateCustomer = customerRepository.findById(customer.getId()).get();

@@ -1,17 +1,11 @@
 package be.ordina.beershop.integrationTests;
 
 import be.ordina.beershop.controller.OrderResource;
-import be.ordina.beershop.domain.Address;
-import be.ordina.beershop.domain.Customer;
-import be.ordina.beershop.domain.LineItem;
-import be.ordina.beershop.domain.Order;
-import be.ordina.beershop.domain.OrderStatus;
-import be.ordina.beershop.domain.Product;
-import be.ordina.beershop.domain.Weight;
-import be.ordina.beershop.domain.WeightUnit;
+import be.ordina.beershop.domain.*;
 import be.ordina.beershop.repository.CustomerRepository;
 import be.ordina.beershop.repository.OrderRepository;
 import be.ordina.beershop.repository.ProductRepository;
+import be.ordina.beershop.shoppingcart.AddItemToShoppingCart;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -100,9 +94,7 @@ public class IntegrationTests {
         final Product product = new Product();
         product.setId(productRepository.findAll().get(0).getId());
 
-        final LineItem lineItem = new LineItem();
-        lineItem.setProduct(product);
-        lineItem.setQuantity(3);
+        final AddItemToShoppingCart lineItem = new AddItemToShoppingCart(product.getId(), 3);
 
         mockMvc.perform(
                 post("/customers/" + customerId + "/shopping-cart/line-items")
