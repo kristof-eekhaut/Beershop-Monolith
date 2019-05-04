@@ -1,8 +1,5 @@
 package be.ordina.beershop.shoppingcart;
 
-import be.ordina.beershop.domain.LineItem;
-import be.ordina.beershop.repository.CustomerRepository;
-import be.ordina.beershop.service.BeerShopService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,34 +8,25 @@ import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/customers")
-public class CustomerController {
-
-    @Autowired
-    private BeerShopService beerShopService;
-    @Autowired
-    private CustomerRepository customerRepository;
+@RequestMapping("/customers/{customerId}/shopping-cart")
+public class ShoppingCartController {
 
     @Autowired
     private ShoppingCartFacade shoppingCartFacade;
 
-    @PostMapping("/{customerId}/shopping-cart/line-items")
+    @PatchMapping("/add-product")
     public ResponseEntity<?> addProductToShoppingCart(@PathVariable UUID customerId, @RequestBody @Valid AddProductToShoppingCart addProductToShoppingCart) {
         shoppingCartFacade.addProduct(customerId, addProductToShoppingCart);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{customerId}/shopping-cart/line-items/{lineItemId}")
-    public ResponseEntity<Void> updateItemInShoppingCart(@PathVariable UUID customerId, @PathVariable String lineItemId, @RequestBody LineItem lineItem) {
-        if (customerRepository.findById(customerId).isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        beerShopService.updateLineInShoppingCart(customerId, lineItem);
+    @PatchMapping("/change-quantity")
+    public ResponseEntity<Void> updateItemInShoppingCart(@PathVariable UUID customerId, @RequestBody @Valid ChangeQuantityOfProductInShoppingCart changeQuantityOfProductInShoppingCart) {
+        shoppingCartFacade.changeQuantityOfProduct(customerId, changeQuantityOfProductInShoppingCart);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{customerId}/shopping-cart/line-items/{productId}")
+    @PatchMapping("/remove-product/{productId}")
     public ResponseEntity<Void> removeProductFromShoppingCart(@PathVariable UUID customerId, @PathVariable UUID productId) {
         shoppingCartFacade.removeProduct(customerId, productId);
         return ResponseEntity.ok().build();

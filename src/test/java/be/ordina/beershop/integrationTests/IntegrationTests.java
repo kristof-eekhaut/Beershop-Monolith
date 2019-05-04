@@ -30,6 +30,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -97,7 +98,7 @@ public class IntegrationTests {
         final AddProductToShoppingCart lineItem = new AddProductToShoppingCart(product.getId(), 3);
 
         mockMvc.perform(
-                post("/customers/" + customerId + "/shopping-cart/line-items")
+                patch("/customers/" + customerId + "/shopping-cart/add-product")
                         .content(objectMapper.writeValueAsString(lineItem))
                         .contentType(MediaType.APPLICATION_JSON))
                .andDo(print())

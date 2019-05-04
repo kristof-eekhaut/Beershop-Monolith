@@ -30,7 +30,7 @@ class ProductController {
         return ResponseEntity.created(URI.create("/products/" + productId)).build();
     }
 
-    @PatchMapping("/{id}/updateStock")
+    @PatchMapping("/{id}/update-stock")
     public ResponseEntity<?> updateProductStock(@PathVariable("id") UUID productId,
                                                 @RequestBody @Valid UpdateProductStock updateProductStock) {
         productFacade.updateProductStock(productId, updateProductStock);

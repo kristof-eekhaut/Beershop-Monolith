@@ -31,7 +31,7 @@ public class UpdateProductStockITest extends IntegrationTest {
                 .build();
 
         mockMvc.perform(
-                patch("/products/" + karmeliet.getId() + "/updateStock")
+                patch("/products/" + karmeliet.getId() + "/update-stock")
                         .content(objectMapper.writeValueAsString(updateProduct))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -59,7 +59,7 @@ public class UpdateProductStockITest extends IntegrationTest {
                 .build();
 
         mockMvc.perform(
-                patch("/products/" + karmeliet.getId() + "/updateStock")
+                patch("/products/" + karmeliet.getId() + "/update-stock")
                         .content(objectMapper.writeValueAsString(updateProduct))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())

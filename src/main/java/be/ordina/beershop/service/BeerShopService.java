@@ -9,6 +9,7 @@ import be.ordina.beershop.repository.CustomerRepository;
 import be.ordina.beershop.repository.OrderRepository;
 import be.ordina.beershop.repository.ProductRepository;
 import be.ordina.beershop.shoppingcart.AddProductToShoppingCart;
+import be.ordina.beershop.shoppingcart.ChangeQuantityOfProductInShoppingCart;
 import be.ordina.beershop.shoppingcart.ProductNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -132,12 +133,14 @@ public class BeerShopService {
 
         LineItem lineItem = productRepository.findById(addProductToShoppingCart.getProductId())
                 .map(product -> LineItem.builder()
+                        .id(UUID.randomUUID())
                         .product(product)
                         .quantity(addProductToShoppingCart.getQuantity())
                         .build())
                 .orElseThrow(() -> new ProductNotFoundException(addProductToShoppingCart.getProductId()));
 
-        initializeLineItem(lineItem);
+        updateLineItemQuantityAndCalculatePrice(lineItem, lineItem.getQuantity());
+
         if (customerIsOldEnoughForProduct(lineItem, customer)) {
             throw new RuntimeException("No underage drinking allowed");
         }
@@ -152,15 +155,13 @@ public class BeerShopService {
         return alcoholPercentageAboveThreshold && customerIsUnderaged;
     }
 
-    private void initializeLineItem(final LineItem lineItem) {
-        if (lineItem.getQuantity() == 0) {
+    private void updateLineItemQuantityAndCalculatePrice(LineItem lineItem, int quantity) {
+        if (quantity == 0) {
             throw new RuntimeException("Quantity should not be 0");
         }
-        final Product product = productRepository.getOne(lineItem.getProduct().getId());
-        final BigDecimal price = calculateProductPrice(product);
+        lineItem.setQuantity(quantity);
+        final BigDecimal price = calculateProductPrice(lineItem.getProduct());
         final BigDecimal linePriceTotal = price.multiply(BigDecimal.valueOf(lineItem.getQuantity()));
-        lineItem.setId(UUID.randomUUID());
-        lineItem.setProduct(product);
         lineItem.setPrice(linePriceTotal);
     }
 
@@ -177,10 +178,15 @@ public class BeerShopService {
         return product.getPrice().subtract(discountAmount).setScale(2, HALF_UP);
     }
 
-    public void updateLineInShoppingCart(final UUID customerId, final LineItem lineItem) {
-        final Customer customer = customerRepository.getOne(customerId);
-        initializeLineItem(lineItem);
-        customer.getShoppingCart().updateLineItem(lineItem);
+    public void updateQuantityOfItemInShoppingCart(final UUID customerId, final ChangeQuantityOfProductInShoppingCart changeQuantityOfProductInShoppingCart) {
+        final Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new be.ordina.beershop.shoppingcart.CustomerNotFoundException(customerId));
+
+        customer.getShoppingCart().getLineItems().stream()
+                .filter(lineItem -> lineItem.getProduct().getId().equals(changeQuantityOfProductInShoppingCart.getProductId()))
+                .findFirst()
+                .ifPresent(lineItem -> updateLineItemQuantityAndCalculatePrice(lineItem, changeQuantityOfProductInShoppingCart.getQuantity()));
+
         customerRepository.save(customer);
     }
 

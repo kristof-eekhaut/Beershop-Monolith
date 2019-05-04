@@ -19,7 +19,7 @@ import static be.ordina.beershop.order.LineItemMatcher.matchesLineItem;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -35,7 +35,7 @@ public class AddProductToShoppingCartITest extends IntegrationTest {
         final AddItemToShoppingCartDTO addItemToShoppingCartDTO = new AddItemToShoppingCartDTO(karmeliet.getId(), 5);
 
         mockMvc.perform(
-                post("/customers/" + customer.getId() + "/shopping-cart/line-items")
+                patch("/customers/" + customer.getId() + "/shopping-cart/add-product")
                         .content(objectMapper.writeValueAsString(addItemToShoppingCartDTO))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -70,7 +70,7 @@ public class AddProductToShoppingCartITest extends IntegrationTest {
         final AddItemToShoppingCartDTO addItemToShoppingCartDTO = new AddItemToShoppingCartDTO(westmalle.getId(), 4);
 
         mockMvc.perform(
-                post("/customers/" + customer.getId() + "/shopping-cart/line-items")
+                patch("/customers/" + customer.getId() + "/shopping-cart/add-product")
                         .content(objectMapper.writeValueAsString(addItemToShoppingCartDTO))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -105,7 +105,7 @@ public class AddProductToShoppingCartITest extends IntegrationTest {
         final AddItemToShoppingCartDTO addItemToShoppingCartDTO = new AddItemToShoppingCartDTO(karmeliet.getId(), 4);
 
         mockMvc.perform(
-                post("/customers/" + customer.getId() + "/shopping-cart/line-items")
+                patch("/customers/" + customer.getId() + "/shopping-cart/add-product")
                         .content(objectMapper.writeValueAsString(addItemToShoppingCartDTO))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -136,7 +136,7 @@ public class AddProductToShoppingCartITest extends IntegrationTest {
         final AddItemToShoppingCartDTO addItemToShoppingCartDTO = new AddItemToShoppingCartDTO(karmeliet.getId(), 0);
 
         mockMvc.perform(
-                post("/customers/" + customer.getId() + "/shopping-cart/line-items")
+                patch("/customers/" + customer.getId() + "/shopping-cart/add-product")
                         .content(objectMapper.writeValueAsString(addItemToShoppingCartDTO))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -159,7 +159,7 @@ public class AddProductToShoppingCartITest extends IntegrationTest {
         final AddItemToShoppingCartDTO addItemToShoppingCartDTO = new AddItemToShoppingCartDTO(karmeliet.getId(), 5);
 
         mockMvc.perform(
-                post("/customers/" + UUID.randomUUID() + "/shopping-cart/line-items")
+                patch("/customers/" + UUID.randomUUID() + "/shopping-cart/add-product")
                         .content(objectMapper.writeValueAsString(addItemToShoppingCartDTO))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -174,7 +174,7 @@ public class AddProductToShoppingCartITest extends IntegrationTest {
         final AddItemToShoppingCartDTO addItemToShoppingCartDTO = new AddItemToShoppingCartDTO(UUID.randomUUID(), 5);
 
         mockMvc.perform(
-                post("/customers/" + customer.getId() + "/shopping-cart/line-items")
+                patch("/customers/" + customer.getId() + "/shopping-cart/add-product")
                         .content(objectMapper.writeValueAsString(addItemToShoppingCartDTO))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())

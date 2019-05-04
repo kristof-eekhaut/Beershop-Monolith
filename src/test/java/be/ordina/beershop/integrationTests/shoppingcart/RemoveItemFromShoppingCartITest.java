@@ -19,6 +19,7 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -37,7 +38,7 @@ public class RemoveItemFromShoppingCartITest extends IntegrationTest {
                 .build());
 
         mockMvc.perform(
-                delete("/customers/" + customer.getId() + "/shopping-cart/line-items/" + karmeliet.getId())
+                patch("/customers/" + customer.getId() + "/shopping-cart/remove-product/" + karmeliet.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -65,7 +66,7 @@ public class RemoveItemFromShoppingCartITest extends IntegrationTest {
                 .build());
 
         mockMvc.perform(
-                delete("/customers/" + customer.getId() + "/shopping-cart/line-items/" + karmeliet.getId())
+                patch("/customers/" + customer.getId() + "/shopping-cart/remove-product/" + karmeliet.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -93,7 +94,7 @@ public class RemoveItemFromShoppingCartITest extends IntegrationTest {
                 .build());
 
         mockMvc.perform(
-                delete("/customers/" + customer.getId() + "/shopping-cart/line-items/" + UUID.randomUUID())
+                patch("/customers/" + customer.getId() + "/shopping-cart/remove-product/" + UUID.randomUUID())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
