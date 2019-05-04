@@ -1,34 +1,35 @@
 package be.ordina.beershop.order;
 
 import be.ordina.beershop.domain.Order;
-import be.ordina.beershop.repository.OrderRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
-import java.util.Optional;
 import java.util.UUID;
+
+import static java.util.Objects.requireNonNull;
 
 @RestController
 @RequestMapping("/orders")
-public class OrderController {
+class OrderController {
 
-    @Autowired
-    private OrderRepository repository;
+    private final OrderFacade orderFacade;
 
-    @Autowired
-    private OrderFacade orderFacade;
+    OrderController(OrderFacade orderFacade) {
+        this.orderFacade = requireNonNull(orderFacade);
+    }
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody CreateOrder createOrder) {
+    public ResponseEntity<?> create(@RequestBody @Valid CreateOrder createOrder) {
         UUID orderId = orderFacade.createOrder(createOrder);
         return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Order> getOrder(@PathVariable("id") UUID id) {
-        Optional<Order> order = repository.findById(id);
-        return order.map(or -> ResponseEntity.ok().body(or)).get();
+        return orderFacade.getOrder(id)
+                .map(order -> ResponseEntity.ok().body(order))
+                .orElse(ResponseEntity.notFound().build());
     }
 }

@@ -61,7 +61,6 @@ public class GetOrderITest extends IntegrationTest {
         mockMvc.perform(
                 get("/orders/" + UUID.randomUUID()))
                 .andDo(print())
-//                .andExpect(status().isNotFound());  // TODO: this should be a NOT_FOUND
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isNotFound());
     }
 }
