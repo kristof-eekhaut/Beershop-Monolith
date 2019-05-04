@@ -25,7 +25,7 @@ public class GetOrderITest extends IntegrationTest {
 
         Product karmeliet = persistProduct(ProductTestData.karmeliet().build());
         Product westmalle = persistProduct(ProductTestData.westmalle().build());
-        Order order = persistOrder(OrderTestData.uppaidOrder(customer, karmeliet, westmalle).build());
+        Order order = persistOrder(OrderTestData.unpaidOrder(customer, karmeliet, westmalle).build());
 
         mockMvc.perform(
                 get("/orders/" + order.getId()))

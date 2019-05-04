@@ -8,6 +8,7 @@ import be.ordina.beershop.domain.Product;
 import be.ordina.beershop.integrationTests.IntegrationTest;
 import be.ordina.beershop.order.OrderTestData;
 import be.ordina.beershop.product.ProductTestData;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 
@@ -18,10 +19,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class PayOrderITest extends IntegrationTest {
+@Ignore // TODO: This functionality doesn't work
+public class RequestShipmentITest extends IntegrationTest {
 
     @Test
-    public void givenOrder_whenPayingOrder_thenOrderIsPaid() throws Exception {
+    public void givenPaidOrder_whenShipmentIsRequested_thenOrderStateIsShipmentRequested() throws Exception {
 
         Product karmeliet = persistProduct(ProductTestData.karmeliet().build());
 
@@ -29,13 +31,13 @@ public class PayOrderITest extends IntegrationTest {
                 .shoppingCart(cartWithItem(karmeliet).build())
                 .build());
 
-        Order order = persistOrder(OrderTestData.unpaidOrder(customer, karmeliet).build());
+        Order order = persistOrder(OrderTestData.paidOrder(customer, karmeliet).build());
 
-        final PayOrderDTO payOrderDTO = new PayOrderDTO(order.getId().toString());
+        final RequestShipmentDTO requestShipmentDTO = new RequestShipmentDTO(order.getId().toString());
 
         mockMvc.perform(
-                post("/payments")
-                        .content(objectMapper.writeValueAsString(payOrderDTO))
+                post("/shipments")
+                        .content(objectMapper.writeValueAsString(requestShipmentDTO))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -43,7 +45,7 @@ public class PayOrderITest extends IntegrationTest {
         runInTransaction(() -> {
             Order updatedOrder = orderRepository.findById(order.getId()).get();
             assertThat(updatedOrder, matchesOrder(OrderTestData.unpaidOrder(customer, karmeliet)
-                    .state(OrderStatus.PAID)
+                    .state(OrderStatus.SHIPMENT_REQUESTED)
                     .build()));
         });
     }

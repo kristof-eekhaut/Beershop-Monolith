@@ -13,7 +13,7 @@ import static be.ordina.beershop.order.LineItemTestData.lineItem;
 
 public class OrderTestData {
 
-    public static Order.Builder uppaidOrder(Customer customer, Product... products) {
+    public static Order.Builder unpaidOrder(Customer customer, Product... products) {
 
         List<LineItem> lineItems = Arrays.stream(products)
                 .map(product -> lineItem(product).build())
@@ -26,5 +26,11 @@ public class OrderTestData {
                 .lineItems(lineItems)
                 .state(OrderStatus.CREATED)
                 .createdOn(LocalDateTime.now());
+    }
+
+    public static Order.Builder paidOrder(Customer customer, Product... products) {
+
+        return unpaidOrder(customer, products)
+                .state(OrderStatus.PAID);
     }
 }
