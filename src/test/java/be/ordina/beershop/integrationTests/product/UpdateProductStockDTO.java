@@ -2,7 +2,7 @@ package be.ordina.beershop.integrationTests.product;
 
 import be.ordina.beershop.integrationTests.WeightDto;
 
-class UpdateProductDTO {
+class UpdateProductStockDTO {
 
     private final String name;
     private final int quantity;
@@ -10,7 +10,7 @@ class UpdateProductDTO {
     private final String alcoholPercentage;
     private final WeightDto weight;
 
-    private UpdateProductDTO(Builder builder) {
+    private UpdateProductStockDTO(Builder builder) {
         name = builder.name;
         quantity = builder.quantity;
         price = builder.price;
@@ -77,8 +77,8 @@ class UpdateProductDTO {
             return this;
         }
 
-        public UpdateProductDTO build() {
-            return new UpdateProductDTO(this);
+        public UpdateProductStockDTO build() {
+            return new UpdateProductStockDTO(this);
         }
     }
 }

@@ -10,13 +10,21 @@ import static java.util.Objects.requireNonNull;
 class ProductFacadeImpl implements ProductFacade {
 
     private CreateProductUseCase createProductUseCase;
+    private UpdateProductStockUseCase updateProductStockUseCase;
 
-    ProductFacadeImpl(CreateProductUseCase createProductUseCase) {
+    ProductFacadeImpl(CreateProductUseCase createProductUseCase,
+                      UpdateProductStockUseCase updateProductStockUseCase) {
         this.createProductUseCase = requireNonNull(createProductUseCase);
+        this.updateProductStockUseCase = requireNonNull(updateProductStockUseCase);
     }
 
     @Override
     public UUID createProduct(CreateProduct createProduct) {
         return createProductUseCase.execute(createProduct);
+    }
+
+    @Override
+    public void updateProductStock(UUID productId, UpdateProductStock updateProductStock) {
+        updateProductStockUseCase.execute(productId, updateProductStock);
     }
 }

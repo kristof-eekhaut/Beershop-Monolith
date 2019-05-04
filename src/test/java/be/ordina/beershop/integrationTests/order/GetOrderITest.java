@@ -7,12 +7,10 @@ import be.ordina.beershop.domain.Product;
 import be.ordina.beershop.integrationTests.IntegrationTest;
 import be.ordina.beershop.order.OrderTestData;
 import be.ordina.beershop.product.ProductTestData;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.UUID;
 
-import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -60,16 +58,10 @@ public class GetOrderITest extends IntegrationTest {
 
     @Test
     public void whenOrderDoesNotExist_thenNotFound() throws Exception {
-        try {
-            mockMvc.perform(
-                    get("/orders/" + UUID.randomUUID()))
-                    .andDo(print())
-                    .andExpect(status().isNotFound())
-                    .andExpect(jsonPath("$.content").value(hasSize(0)));
-
-            Assert.fail();
-        } catch (Exception exception) {
-            // TODO: we should return a NOT_FOUND instead
-        }
+        mockMvc.perform(
+                get("/orders/" + UUID.randomUUID()))
+                .andDo(print())
+//                .andExpect(status().isNotFound());  // TODO: this should be a NOT_FOUND
+                .andExpect(status().isInternalServerError());
     }
 }
