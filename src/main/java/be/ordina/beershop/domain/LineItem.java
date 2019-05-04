@@ -10,6 +10,8 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
+
 @Entity(name = "LINE_ITEM")
 public class LineItem {
 
@@ -69,6 +71,11 @@ public class LineItem {
 
     public void setPrice(final BigDecimal price) {
         this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return reflectionToString(this);
     }
 
     public static Builder builder() {

@@ -6,13 +6,14 @@ import be.ordina.beershop.domain.Product;
 import be.ordina.beershop.repository.CustomerRepository;
 import be.ordina.beershop.repository.OrderRepository;
 import be.ordina.beershop.repository.ProductRepository;
+import be.ordina.beershop.repository.ShoppingCartRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlGroup;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -20,6 +21,10 @@ import org.springframework.transaction.support.TransactionTemplate;
 @SpringBootTest
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
+@SqlGroup({
+        @Sql(value = "classpath:truncate.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
+        @Sql(value = "classpath:truncate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+})
 public abstract class IntegrationTest {
 
     @Autowired
@@ -35,16 +40,8 @@ public abstract class IntegrationTest {
     protected OrderRepository orderRepository;
     @Autowired
     protected CustomerRepository customerRepository;
-
-    @Before
-    public void setUp() {
-        clearDataBase();
-    }
-
-    @After
-    public void tearDown() {
-        clearDataBase();
-    }
+    @Autowired
+    protected ShoppingCartRepository shoppingCartRepository;
 
     protected Product persistProduct(Product product) {
         return runInTransaction(() -> productRepository.save(product));
@@ -79,12 +76,6 @@ public abstract class IntegrationTest {
                 throw new IllegalStateException(e);
             }
         });
-    }
-
-    private void clearDataBase() {
-        orderRepository.deleteAll();
-        customerRepository.deleteAll();
-        productRepository.deleteAll();
     }
 
     @FunctionalInterface

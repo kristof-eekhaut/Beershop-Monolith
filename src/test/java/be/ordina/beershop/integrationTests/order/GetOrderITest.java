@@ -45,13 +45,13 @@ public class GetOrderITest extends IntegrationTest {
                 .andExpect(jsonPath("$.lineItems[0].id").isNotEmpty())
                 .andExpect(jsonPath("$.lineItems[0].product.id").value(karmeliet.getId().toString()))
                 .andExpect(jsonPath("$.lineItems[0].quantity").value(10))
-                .andExpect(jsonPath("$.lineItems[0].price").value(1.20))
+                .andExpect(jsonPath("$.lineItems[0].price").value(12.0))
 
                 // LineItem Westmalle
                 .andExpect(jsonPath("$.lineItems[1].id").isNotEmpty())
                 .andExpect(jsonPath("$.lineItems[1].product.id").value(westmalle.getId().toString()))
                 .andExpect(jsonPath("$.lineItems[1].quantity").value(10))
-                .andExpect(jsonPath("$.lineItems[1].price").value(1.30))
+                .andExpect(jsonPath("$.lineItems[1].price").value(13.0))
 
                 .andExpect(jsonPath("$.shipmentId").isEmpty());
     }

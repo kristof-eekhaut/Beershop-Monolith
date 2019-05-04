@@ -96,7 +96,7 @@ public class Customer {
         private UUID id;
         private String name;
         private LocalDate birthDate;
-        private ShoppingCart shoppingCart;
+        private ShoppingCart shoppingCart = new ShoppingCart();
         private Address address;
 
         private Builder() {
