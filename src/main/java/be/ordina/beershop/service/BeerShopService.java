@@ -1,15 +1,10 @@
 package be.ordina.beershop.service;
 
-import be.ordina.beershop.controller.OrderResource;
 import be.ordina.beershop.controller.PaymentResource;
 import be.ordina.beershop.controller.ShipmentResource;
-import be.ordina.beershop.domain.Customer;
-import be.ordina.beershop.domain.Discount;
-import be.ordina.beershop.domain.LineItem;
-import be.ordina.beershop.domain.Order;
-import be.ordina.beershop.domain.OrderStatus;
-import be.ordina.beershop.domain.Product;
-import be.ordina.beershop.domain.ShoppingCart;
+import be.ordina.beershop.domain.*;
+import be.ordina.beershop.order.CreateOrder;
+import be.ordina.beershop.order.CustomerNotFoundException;
 import be.ordina.beershop.repository.CustomerRepository;
 import be.ordina.beershop.repository.OrderRepository;
 import be.ordina.beershop.repository.ProductRepository;
@@ -49,8 +44,9 @@ public class BeerShopService {
     @Autowired
     private CustomerRepository customerRepository;
 
-    public Order createOrder(final OrderResource orderResource) {
-        final Customer customer = customerRepository.getOne(orderResource.getCustomerId());
+    public Order createOrder(final CreateOrder createOrder) {
+        final Customer customer = customerRepository.findById(createOrder.getCustomerId())
+                .orElseThrow(() -> new CustomerNotFoundException(createOrder.getCustomerId()));
         final List<LineItem> lineItems = customer.getShoppingCart().getLineItems();
 
         final Order order = new Order();

@@ -1,10 +1,7 @@
 package be.ordina.beershop.integrationTests.order;
 
 import be.ordina.beershop.customer.CustomerTestData;
-import be.ordina.beershop.domain.Customer;
-import be.ordina.beershop.domain.Order;
-import be.ordina.beershop.domain.OrderStatus;
-import be.ordina.beershop.domain.Product;
+import be.ordina.beershop.domain.*;
 import be.ordina.beershop.integrationTests.IntegrationTest;
 import be.ordina.beershop.product.ProductTestData;
 import org.junit.Test;
@@ -26,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CreateOrderITest extends IntegrationTest {
 
     @Test
-    public void givenCustomerWithShoppingCart_whenCreatingNewOrder_thenOrderIsCreated() throws Exception {
+    public void givenCustomerWithShoppingCart_whenCreatingNewOrder_thenOrderIsCreatedAndShoppingCartIsCleared() throws Exception {
 
         Product karmeliet = persistProduct(ProductTestData.karmeliet().build());
         Product westmalle = persistProduct(ProductTestData.westmalle().build());
@@ -68,6 +65,9 @@ public class CreateOrderITest extends IntegrationTest {
                             .quantity(2)
                             .build())
                     .build()));
+
+            ShoppingCart updatedShoppingCart = customerRepository.findById(customer.getId()).get().getShoppingCart();
+            assertThat(updatedShoppingCart.getLineItems(), hasSize(0));
         });
     }
 
