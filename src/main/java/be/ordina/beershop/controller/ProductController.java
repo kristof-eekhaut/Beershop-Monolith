@@ -1,6 +1,8 @@
 package be.ordina.beershop.controller;
 
 import be.ordina.beershop.domain.Product;
+import be.ordina.beershop.product.CreateProduct;
+import be.ordina.beershop.product.ProductFacade;
 import be.ordina.beershop.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,12 +30,13 @@ public class ProductController {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private ProductFacade productFacade;
+
     @PostMapping
-    public ResponseEntity<Void> createProduct(@RequestBody @Valid Product product) {
-        final UUID id = UUID.randomUUID();
-        product.setId(id);
-        productRepository.save(product);
-        return ResponseEntity.created(URI.create("/products/" + id)).build();
+    public ResponseEntity<Void> createProduct(@RequestBody @Valid CreateProduct createProduct) {
+        UUID productId = productFacade.createProduct(createProduct);
+        return ResponseEntity.created(URI.create("/products/" + productId)).build();
     }
 
     @PutMapping("/{id}")
