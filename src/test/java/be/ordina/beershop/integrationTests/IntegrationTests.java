@@ -1,7 +1,7 @@
 package be.ordina.beershop.integrationTests;
 
-import be.ordina.beershop.controller.OrderResource;
 import be.ordina.beershop.domain.*;
+import be.ordina.beershop.order.CreateOrder;
 import be.ordina.beershop.repository.CustomerRepository;
 import be.ordina.beershop.repository.OrderRepository;
 import be.ordina.beershop.repository.ProductRepository;
@@ -29,9 +29,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -106,7 +104,7 @@ public class IntegrationTests {
 
         mockMvc.perform(
                 post("/orders")
-                        .content(objectMapper.writeValueAsString(new OrderResource(customerId)))
+                        .content(objectMapper.writeValueAsString(new CreateOrder(customerId)))
                         .contentType(MediaType.APPLICATION_JSON))
                .andDo(print())
                .andExpect(status().isCreated());
