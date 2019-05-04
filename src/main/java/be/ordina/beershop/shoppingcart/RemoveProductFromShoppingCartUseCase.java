@@ -9,16 +9,16 @@ import java.util.UUID;
 import static java.util.Objects.requireNonNull;
 
 @Component
-class AddItemToShoppingCartUseCase {
+class RemoveProductFromShoppingCartUseCase {
 
     private final BeerShopService beerShopService;
 
-    AddItemToShoppingCartUseCase(BeerShopService beerShopService) {
+    RemoveProductFromShoppingCartUseCase(BeerShopService beerShopService) {
         this.beerShopService = requireNonNull(beerShopService);
     }
 
     @Transactional
-    void execute(UUID customerId, AddItemToShoppingCart addItemToShoppingCart) {
-        beerShopService.createItemInShoppingCart(customerId, addItemToShoppingCart);
+    public void execute(UUID customerId, UUID productId) {
+        beerShopService.deleteLineInShoppingCart(customerId, productId);
     }
 }

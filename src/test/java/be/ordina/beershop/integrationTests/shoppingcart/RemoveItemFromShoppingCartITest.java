@@ -37,7 +37,7 @@ public class RemoveItemFromShoppingCartITest extends IntegrationTest {
                 .build());
 
         mockMvc.perform(
-                delete("/customers/" + customer.getId() + "/shopping-cart/line-items/" + lineItem.getId())
+                delete("/customers/" + customer.getId() + "/shopping-cart/line-items/" + karmeliet.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -65,7 +65,7 @@ public class RemoveItemFromShoppingCartITest extends IntegrationTest {
                 .build());
 
         mockMvc.perform(
-                delete("/customers/" + customer.getId() + "/shopping-cart/line-items/" + lineItem.getId())
+                delete("/customers/" + customer.getId() + "/shopping-cart/line-items/" + karmeliet.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());

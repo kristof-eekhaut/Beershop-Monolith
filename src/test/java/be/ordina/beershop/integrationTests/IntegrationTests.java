@@ -5,7 +5,7 @@ import be.ordina.beershop.domain.*;
 import be.ordina.beershop.repository.CustomerRepository;
 import be.ordina.beershop.repository.OrderRepository;
 import be.ordina.beershop.repository.ProductRepository;
-import be.ordina.beershop.shoppingcart.AddItemToShoppingCart;
+import be.ordina.beershop.shoppingcart.AddProductToShoppingCart;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -94,7 +94,7 @@ public class IntegrationTests {
         final Product product = new Product();
         product.setId(productRepository.findAll().get(0).getId());
 
-        final AddItemToShoppingCart lineItem = new AddItemToShoppingCart(product.getId(), 3);
+        final AddProductToShoppingCart lineItem = new AddProductToShoppingCart(product.getId(), 3);
 
         mockMvc.perform(
                 post("/customers/" + customerId + "/shopping-cart/line-items")

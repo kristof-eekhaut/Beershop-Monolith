@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
-public class AddItemToShoppingCart {
+public class AddProductToShoppingCart {
 
     @NotNull
     private final UUID productId;
@@ -14,8 +14,8 @@ public class AddItemToShoppingCart {
     private final int quantity;
 
     @JsonCreator
-    public AddItemToShoppingCart(@JsonProperty("productId") final UUID productId,
-                                 @JsonProperty("quantity") final int quantity) {
+    public AddProductToShoppingCart(@JsonProperty("productId") final UUID productId,
+                                    @JsonProperty("quantity") final int quantity) {
         this.productId = productId;
         this.quantity = quantity;
     }

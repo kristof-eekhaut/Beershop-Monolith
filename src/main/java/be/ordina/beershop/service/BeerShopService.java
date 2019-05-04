@@ -8,7 +8,7 @@ import be.ordina.beershop.order.CustomerNotFoundException;
 import be.ordina.beershop.repository.CustomerRepository;
 import be.ordina.beershop.repository.OrderRepository;
 import be.ordina.beershop.repository.ProductRepository;
-import be.ordina.beershop.shoppingcart.AddItemToShoppingCart;
+import be.ordina.beershop.shoppingcart.AddProductToShoppingCart;
 import be.ordina.beershop.shoppingcart.ProductNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -126,16 +126,16 @@ public class BeerShopService {
                     .allMatch(lineItem -> lineItem.getQuantity() <= lineItem.getProduct().getQuantity());
     }
 
-    public void createItemInShoppingCart(final UUID customerId, final AddItemToShoppingCart addItemToShoppingCart) {
+    public void createItemInShoppingCart(final UUID customerId, final AddProductToShoppingCart addProductToShoppingCart) {
         final Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new be.ordina.beershop.shoppingcart.CustomerNotFoundException(customerId));
 
-        LineItem lineItem = productRepository.findById(addItemToShoppingCart.getProductId())
+        LineItem lineItem = productRepository.findById(addProductToShoppingCart.getProductId())
                 .map(product -> LineItem.builder()
                         .product(product)
-                        .quantity(addItemToShoppingCart.getQuantity())
+                        .quantity(addProductToShoppingCart.getQuantity())
                         .build())
-                .orElseThrow(() -> new ProductNotFoundException(addItemToShoppingCart.getProductId()));
+                .orElseThrow(() -> new ProductNotFoundException(addProductToShoppingCart.getProductId()));
 
         initializeLineItem(lineItem);
         if (customerIsOldEnoughForProduct(lineItem, customer)) {
@@ -184,9 +184,10 @@ public class BeerShopService {
         customerRepository.save(customer);
     }
 
-    public void deleteLineInShoppingCart(final UUID customerId, final UUID lineItemId) {
-        final Customer customer = customerRepository.getOne(customerId);
-        customer.getShoppingCart().deleteLine(lineItemId);
+    public void deleteLineInShoppingCart(final UUID customerId, final UUID productId) {
+        final Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new be.ordina.beershop.shoppingcart.CustomerNotFoundException(customerId));
+        customer.getShoppingCart().deleteLine(productId);
         customerRepository.save(customer);
     }
 }

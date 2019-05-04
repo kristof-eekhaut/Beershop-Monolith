@@ -4,5 +4,7 @@ import java.util.UUID;
 
 public interface ShoppingCartFacade {
 
-    void addItem(UUID customerId, AddItemToShoppingCart addItemToShoppingCart);
+    void addProduct(UUID customerId, AddProductToShoppingCart addProductToShoppingCart);
+
+    void removeProduct(UUID customerId, UUID productId);
 }

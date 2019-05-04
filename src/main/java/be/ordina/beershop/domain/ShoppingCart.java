@@ -56,8 +56,8 @@ public class ShoppingCart {
                  .ifPresent(lineItem -> lineItem.setQuantity(lineItemUpdate.getQuantity()));
     }
 
-    public void deleteLine(final UUID lineItemId) {
-        lineItems.removeIf(lineItem -> lineItem.getId().equals(lineItemId));
+    public void deleteLine(final UUID productId) {
+        lineItems.removeIf(lineItem -> lineItem.getProduct().getId().equals(productId));
     }
 
     public void clear() {

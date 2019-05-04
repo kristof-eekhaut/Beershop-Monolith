@@ -9,14 +9,22 @@ import static java.util.Objects.requireNonNull;
 @Service
 class ShoppingCartFacadeImpl implements ShoppingCartFacade {
 
-    private final AddItemToShoppingCartUseCase addItemToShoppingCartUseCase;
+    private final AddProductToShoppingCartUseCase addProductToShoppingCartUseCase;
+    private final RemoveProductFromShoppingCartUseCase removeProductFromShoppingCartUseCase;
 
-    ShoppingCartFacadeImpl(AddItemToShoppingCartUseCase addItemToShoppingCartUseCase) {
-        this.addItemToShoppingCartUseCase = requireNonNull(addItemToShoppingCartUseCase);
+    ShoppingCartFacadeImpl(AddProductToShoppingCartUseCase addProductToShoppingCartUseCase,
+                           RemoveProductFromShoppingCartUseCase removeProductFromShoppingCartUseCase) {
+        this.addProductToShoppingCartUseCase = requireNonNull(addProductToShoppingCartUseCase);
+        this.removeProductFromShoppingCartUseCase = requireNonNull(removeProductFromShoppingCartUseCase);
     }
 
     @Override
-    public void addItem(UUID customerId, AddItemToShoppingCart addItemToShoppingCart) {
-        addItemToShoppingCartUseCase.execute(customerId, addItemToShoppingCart);
+    public void addProduct(UUID customerId, AddProductToShoppingCart addProductToShoppingCart) {
+        addProductToShoppingCartUseCase.execute(customerId, addProductToShoppingCart);
+    }
+
+    @Override
+    public void removeProduct(UUID customerId, UUID productId) {
+        removeProductFromShoppingCartUseCase.execute(customerId, productId);
     }
 }

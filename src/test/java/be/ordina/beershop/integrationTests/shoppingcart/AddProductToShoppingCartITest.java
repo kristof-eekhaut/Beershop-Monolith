@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class AddItemToShoppingCartITest extends IntegrationTest {
+public class AddProductToShoppingCartITest extends IntegrationTest {
 
     @Test
     public void givenCustomerWithEmptyShoppingCart_whenAddingItemToShoppingCart_thenShoppingCartContainsItem() throws Exception {

@@ -23,8 +23,8 @@ public class CustomerController {
     private ShoppingCartFacade shoppingCartFacade;
 
     @PostMapping("/{customerId}/shopping-cart/line-items")
-    public ResponseEntity<?> addItemToShoppingCart(@PathVariable UUID customerId, @RequestBody @Valid AddItemToShoppingCart addItemToShoppingCart) {
-        shoppingCartFacade.addItem(customerId, addItemToShoppingCart);
+    public ResponseEntity<?> addProductToShoppingCart(@PathVariable UUID customerId, @RequestBody @Valid AddProductToShoppingCart addProductToShoppingCart) {
+        shoppingCartFacade.addProduct(customerId, addProductToShoppingCart);
         return ResponseEntity.ok().build();
     }
 
@@ -38,13 +38,9 @@ public class CustomerController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{customerId}/shopping-cart/line-items/{lineItemId}")
-    public ResponseEntity<Void> deleteItemFromShoppingCart(@PathVariable UUID customerId, @PathVariable UUID lineItemId) {
-        if (customerRepository.findById(customerId).isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        beerShopService.deleteLineInShoppingCart(customerId, lineItemId);
+    @DeleteMapping("/{customerId}/shopping-cart/line-items/{productId}")
+    public ResponseEntity<Void> removeProductFromShoppingCart(@PathVariable UUID customerId, @PathVariable UUID productId) {
+        shoppingCartFacade.removeProduct(customerId, productId);
         return ResponseEntity.ok().build();
     }
 }
