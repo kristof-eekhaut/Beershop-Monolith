@@ -1,6 +1,5 @@
 package be.ordina.beershop.service;
 
-import be.ordina.beershop.controller.ShipmentResource;
 import be.ordina.beershop.domain.*;
 import be.ordina.beershop.order.CreateOrder;
 import be.ordina.beershop.order.CustomerNotFoundException;
@@ -67,8 +66,8 @@ public class BeerShopService {
 
 
     @Transactional
-    public void requestShipment(final ShipmentResource shipmentResource) {
-        final Optional<Order> maybeOrder = orderRepository.findById(shipmentResource.getOrderId());
+    public void requestShipment(final UUID orderId) {
+        final Optional<Order> maybeOrder = orderRepository.findById(orderId);
         maybeOrder.ifPresent(order -> {
 
             if (order.getState() != OrderStatus.PAID) {

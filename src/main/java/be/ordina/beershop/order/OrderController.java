@@ -38,4 +38,10 @@ class OrderController {
         orderFacade.payOrder(id);
         return ResponseEntity.ok().build();
     }
+
+    @PatchMapping("/{id}/requestShipment")
+    public ResponseEntity<Void> requestShipment(@PathVariable("id") UUID id) {
+        orderFacade.requestShipment(id);
+        return ResponseEntity.ok().build();
+    }
 }

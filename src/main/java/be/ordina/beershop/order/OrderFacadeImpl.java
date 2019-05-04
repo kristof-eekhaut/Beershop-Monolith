@@ -14,13 +14,16 @@ class OrderFacadeImpl implements OrderFacade {
     private final CreateOrderUseCase createOrderUseCase;
     private final GetOrderUseCase getOrderUseCase;
     private final PayOrderUseCase payOrderUseCase;
+    private final RequestShipmentUseCase requestShipmentUseCase;
 
     OrderFacadeImpl(CreateOrderUseCase createOrderUseCase,
                     GetOrderUseCase getOrderUseCase,
-                    PayOrderUseCase payOrderUseCase) {
+                    PayOrderUseCase payOrderUseCase,
+                    RequestShipmentUseCase requestShipmentUseCase) {
         this.createOrderUseCase = requireNonNull(createOrderUseCase);
         this.getOrderUseCase = requireNonNull(getOrderUseCase);
         this.payOrderUseCase = requireNonNull(payOrderUseCase);
+        this.requestShipmentUseCase = requireNonNull(requestShipmentUseCase);
     }
 
     @Override
@@ -36,5 +39,10 @@ class OrderFacadeImpl implements OrderFacade {
     @Override
     public void payOrder(UUID id) {
         payOrderUseCase.execute(id);
+    }
+
+    @Override
+    public void requestShipment(UUID orderId) {
+        requestShipmentUseCase.execute(orderId);
     }
 }

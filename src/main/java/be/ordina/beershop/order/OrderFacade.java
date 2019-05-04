@@ -12,4 +12,6 @@ public interface OrderFacade {
     Optional<Order> getOrder(UUID id);
 
     void payOrder(UUID id);
+
+    void requestShipment(UUID orderId);
 }
