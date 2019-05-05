@@ -17,6 +17,11 @@
             <artifactId>beershop-api</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>be.ordina</groupId>
+            <artifactId>beershop-domain</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
