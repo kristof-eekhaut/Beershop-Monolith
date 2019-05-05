@@ -18,7 +18,7 @@ class RemoveProductFromShoppingCartUseCase {
     }
 
     @Transactional
-    public void execute(UUID customerId, UUID productId) {
-        beerShopService.deleteLineInShoppingCart(customerId, productId);
+    public void execute(String customerId, String productId) {
+        beerShopService.deleteLineInShoppingCart(UUID.fromString(customerId), UUID.fromString(productId));
     }
 }

@@ -4,7 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.util.UUID;
 
 import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
@@ -12,7 +12,7 @@ import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToStrin
 @Entity(name = "DISCOUNT")
 public class Discount {
 
-    public static final Discount NONE = new Discount(BigDecimal.ZERO, ZonedDateTime.now(), ZonedDateTime.now());
+    public static final Discount NONE = Discount.builder().percentage(BigDecimal.ZERO).startDate(LocalDate.now()).endDate(LocalDate.now()).build();
 
     @Id
     @Column(name = "ID")
@@ -22,19 +22,13 @@ public class Discount {
     private BigDecimal percentage;
 
     @Column(name = "START_DATE")
-    private ZonedDateTime startDate;
+    private LocalDate startDate;
 
     @Column(name = "END_DATE")
-    private ZonedDateTime endDate;
+    private LocalDate endDate;
 
     protected Discount() {
         // hibernate
-    }
-
-    public Discount(final BigDecimal percentage, final ZonedDateTime startDate, final ZonedDateTime endDate) {
-        this.percentage = percentage;
-        this.startDate = startDate;
-        this.endDate = endDate;
     }
 
     private Discount(Builder builder) {
@@ -60,19 +54,19 @@ public class Discount {
         this.percentage = percentage;
     }
 
-    public ZonedDateTime getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(final ZonedDateTime startDate) {
+    public void setStartDate(final LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public ZonedDateTime getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(final ZonedDateTime endDate) {
+    public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
 
@@ -88,8 +82,8 @@ public class Discount {
     public static final class Builder {
         private UUID id;
         private BigDecimal percentage;
-        private ZonedDateTime startDate;
-        private ZonedDateTime endDate;
+        private LocalDate startDate;
+        private LocalDate endDate;
 
         private Builder() {
         }
@@ -104,12 +98,12 @@ public class Discount {
             return this;
         }
 
-        public Builder startDate(ZonedDateTime startDate) {
+        public Builder startDate(LocalDate startDate) {
             this.startDate = startDate;
             return this;
         }
 
-        public Builder endDate(ZonedDateTime endDate) {
+        public Builder endDate(LocalDate endDate) {
             this.endDate = endDate;
             return this;
         }

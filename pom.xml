@@ -25,6 +25,7 @@
 		<module>beershop-api</module>
 		<module>beershop-app</module>
 		<module>beershop-rest</module>
+		<module>beershop-boot</module>
 	</modules>
 
 </project>

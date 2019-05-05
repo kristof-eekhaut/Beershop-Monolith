@@ -18,7 +18,7 @@ class AddProductToShoppingCartUseCase {
     }
 
     @Transactional
-    void execute(UUID customerId, AddProductToShoppingCart addProductToShoppingCart) {
-        beerShopService.createItemInShoppingCart(customerId, addProductToShoppingCart);
+    void execute(String customerId, AddProductToShoppingCartCommand command) {
+        beerShopService.createItemInShoppingCart(UUID.fromString(customerId), command);
     }
 }

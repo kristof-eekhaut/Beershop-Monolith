@@ -4,7 +4,6 @@ import be.ordina.beershop.service.BeerShopService;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
-import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;
 
@@ -18,7 +17,7 @@ class CreateOrderUseCase {
     }
 
     @Transactional
-    UUID execute(CreateOrder createOrder) {
-        return beerShopService.createOrder(createOrder).getId();
+    String execute(CreateOrderCommand command) {
+        return beerShopService.createOrder(command).getId().toString();
     }
 }

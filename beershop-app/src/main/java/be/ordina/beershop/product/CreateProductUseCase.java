@@ -1,6 +1,9 @@
 package be.ordina.beershop.product;
 
 import be.ordina.beershop.domain.Product;
+import be.ordina.beershop.domain.Weight;
+import be.ordina.beershop.domain.WeightUnit;
+import be.ordina.beershop.product.dto.WeightDTO;
 import be.ordina.beershop.repository.ProductRepository;
 import org.springframework.stereotype.Component;
 
@@ -19,17 +22,21 @@ class CreateProductUseCase {
     }
 
     @Transactional
-    UUID execute(CreateProduct createProduct) {
+    String execute(CreateProductCommand command) {
 
         Product product = Product.builder()
                 .id(UUID.randomUUID())
-                .name(createProduct.getName())
-                .quantity(createProduct.getQuantity())
-                .price(createProduct.getPrice())
-                .alcoholPercentage(createProduct.getAlcoholPercentage())
-                .weight(createProduct.getWeight())
+                .name(command.getName())
+                .quantity(command.getQuantity())
+                .price(command.getPrice())
+                .alcoholPercentage(command.getAlcoholPercentage())
+                .weight(createWeight(command.getWeight()))
                 .build();
 
-        return productRepository.save(product).getId();
+        return productRepository.save(product).getId().toString();
+    }
+
+    private Weight createWeight(WeightDTO weightDTO) {
+        return Weight.weight(weightDTO.getAmount(), WeightUnit.valueOf(weightDTO.getUnit()));
     }
 }

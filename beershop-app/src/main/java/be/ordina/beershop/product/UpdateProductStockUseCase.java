@@ -18,14 +18,15 @@ class UpdateProductStockUseCase {
     }
 
     @Transactional
-    void execute(UUID productId, UpdateProductStock updateProductStock) {
+    void execute(UpdateProductStockCommand command) {
 
-        if (updateProductStock.getQuantity() < 0) {
+        if (command.getQuantity() < 0) {
             throw new InvalidProductQuantityException("Quantity can not be less than 0.");
         }
 
+        UUID productId = UUID.fromString(command.getProductId());
         productRepository.findById(productId).ifPresent(product -> {
-            product.setQuantity(updateProductStock.getQuantity());
+            product.setQuantity(command.getQuantity());
             productRepository.save(product);
         });
     }

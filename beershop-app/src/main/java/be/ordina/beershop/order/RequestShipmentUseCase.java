@@ -18,7 +18,7 @@ class RequestShipmentUseCase {
     }
 
     @Transactional
-    void execute(UUID orderId) {
-        beerShopService.requestShipment(orderId);
+    void execute(String orderId) {
+        beerShopService.requestShipment(UUID.fromString(orderId));
     }
 }

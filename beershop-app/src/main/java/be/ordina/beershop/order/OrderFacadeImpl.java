@@ -1,10 +1,8 @@
 package be.ordina.beershop.order;
 
-import be.ordina.beershop.domain.Order;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;
 
@@ -27,22 +25,22 @@ class OrderFacadeImpl implements OrderFacade {
     }
 
     @Override
-    public UUID createOrder(CreateOrder createOrder) {
-        return createOrderUseCase.execute(createOrder);
+    public String createOrder(CreateOrderCommand command) {
+        return createOrderUseCase.execute(command);
     }
 
     @Override
-    public Optional<Order> getOrder(UUID id) {
-        return getOrderUseCase.execute(id);
+    public Optional<OrderView> getOrder(String orderId) {
+        return getOrderUseCase.execute(orderId);
     }
 
     @Override
-    public void payOrder(UUID id) {
-        payOrderUseCase.execute(id);
+    public void payOrder(String orderId) {
+        payOrderUseCase.execute(orderId);
     }
 
     @Override
-    public void requestShipment(UUID orderId) {
+    public void requestShipment(String orderId) {
         requestShipmentUseCase.execute(orderId);
     }
 }

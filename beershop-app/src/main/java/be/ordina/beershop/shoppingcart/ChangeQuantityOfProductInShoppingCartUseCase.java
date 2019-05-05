@@ -18,7 +18,7 @@ class ChangeQuantityOfProductInShoppingCartUseCase {
     }
 
     @Transactional
-    void execute(UUID customerId, ChangeQuantityOfProductInShoppingCart changeQuantityOfProductInShoppingCart) {
-        beerShopService.updateQuantityOfItemInShoppingCart(customerId, changeQuantityOfProductInShoppingCart);
+    void execute(String customerId, ChangeQuantityOfProductInShoppingCartCommand command) {
+        beerShopService.updateQuantityOfItemInShoppingCart(UUID.fromString(customerId), command);
     }
 }

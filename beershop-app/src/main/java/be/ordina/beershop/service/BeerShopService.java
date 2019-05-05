@@ -1,14 +1,14 @@
 package be.ordina.beershop.service;
 
 import be.ordina.beershop.domain.*;
-import be.ordina.beershop.order.CreateOrder;
+import be.ordina.beershop.order.CreateOrderCommand;
 import be.ordina.beershop.order.CustomerNotFoundException;
 import be.ordina.beershop.order.OrderNotFoundException;
 import be.ordina.beershop.repository.CustomerRepository;
 import be.ordina.beershop.repository.OrderRepository;
 import be.ordina.beershop.repository.ProductRepository;
-import be.ordina.beershop.shoppingcart.AddProductToShoppingCart;
-import be.ordina.beershop.shoppingcart.ChangeQuantityOfProductInShoppingCart;
+import be.ordina.beershop.shoppingcart.AddProductToShoppingCartCommand;
+import be.ordina.beershop.shoppingcart.ChangeQuantityOfProductInShoppingCartCommand;
 import be.ordina.beershop.shoppingcart.ProductNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -25,7 +25,7 @@ import java.util.UUID;
 
 import static java.math.RoundingMode.HALF_UP;
 import static java.math.RoundingMode.UNNECESSARY;
-import static java.time.ZonedDateTime.now;
+import static java.time.LocalDate.now;
 
 @Service
 @Transactional
@@ -46,9 +46,10 @@ public class BeerShopService {
     @Autowired
     private CustomerRepository customerRepository;
 
-    public Order createOrder(final CreateOrder createOrder) {
-        final Customer customer = customerRepository.findById(createOrder.getCustomerId())
-                .orElseThrow(() -> new CustomerNotFoundException(createOrder.getCustomerId()));
+    public Order createOrder(final CreateOrderCommand createOrderCommand) {
+        UUID customerId = UUID.fromString(createOrderCommand.getCustomerId());
+        final Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new CustomerNotFoundException(customerId));
         final List<LineItem> lineItems = customer.getShoppingCart().getLineItems();
 
         final Order order = new Order();
@@ -127,17 +128,18 @@ public class BeerShopService {
                     .allMatch(lineItem -> lineItem.getQuantity() <= lineItem.getProduct().getQuantity());
     }
 
-    public void createItemInShoppingCart(final UUID customerId, final AddProductToShoppingCart addProductToShoppingCart) {
+    public void createItemInShoppingCart(final UUID customerId, final AddProductToShoppingCartCommand addProductToShoppingCartCommand) {
         final Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new be.ordina.beershop.shoppingcart.CustomerNotFoundException(customerId));
 
-        LineItem lineItem = productRepository.findById(addProductToShoppingCart.getProductId())
+        UUID productId = UUID.fromString(addProductToShoppingCartCommand.getProductId());
+        LineItem lineItem = productRepository.findById(productId)
                 .map(product -> LineItem.builder()
                         .id(UUID.randomUUID())
                         .product(product)
-                        .quantity(addProductToShoppingCart.getQuantity())
+                        .quantity(addProductToShoppingCartCommand.getQuantity())
                         .build())
-                .orElseThrow(() -> new ProductNotFoundException(addProductToShoppingCart.getProductId()));
+                .orElseThrow(() -> new ProductNotFoundException(productId));
 
         updateLineItemQuantityAndCalculatePrice(lineItem, lineItem.getQuantity());
 
@@ -178,14 +180,15 @@ public class BeerShopService {
         return product.getPrice().subtract(discountAmount).setScale(2, HALF_UP);
     }
 
-    public void updateQuantityOfItemInShoppingCart(final UUID customerId, final ChangeQuantityOfProductInShoppingCart changeQuantityOfProductInShoppingCart) {
+    public void updateQuantityOfItemInShoppingCart(final UUID customerId, final ChangeQuantityOfProductInShoppingCartCommand command) {
         final Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new be.ordina.beershop.shoppingcart.CustomerNotFoundException(customerId));
 
+        UUID productId = UUID.fromString(command.getProductId());
         customer.getShoppingCart().getLineItems().stream()
-                .filter(lineItem -> lineItem.getProduct().getId().equals(changeQuantityOfProductInShoppingCart.getProductId()))
+                .filter(lineItem -> lineItem.getProduct().getId().equals(productId))
                 .findFirst()
-                .ifPresent(lineItem -> updateLineItemQuantityAndCalculatePrice(lineItem, changeQuantityOfProductInShoppingCart.getQuantity()));
+                .ifPresent(lineItem -> updateLineItemQuantityAndCalculatePrice(lineItem, command.getQuantity()));
 
         customerRepository.save(customer);
     }

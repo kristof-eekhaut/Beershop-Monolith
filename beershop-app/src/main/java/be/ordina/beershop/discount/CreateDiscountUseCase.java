@@ -21,20 +21,21 @@ class CreateDiscountUseCase {
     }
 
     @Transactional
-    void execute(CreateDiscount createDiscount) {
-        Product product = productRepository.findById(createDiscount.getProductId())
-                .orElseThrow(() -> new ProductNotFoundException(createDiscount.getProductId()));
+    void execute(CreateDiscountCommand command) {
+        UUID productId = UUID.fromString(command.getProductId());
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException(productId));
 
-        addDiscount(product, createDiscount);
+        addDiscount(product, command);
         productRepository.save(product);
     }
 
-    private void addDiscount(Product product, CreateDiscount createDiscount) {
+    private void addDiscount(Product product, CreateDiscountCommand command) {
         Discount discount = Discount.builder()
                 .id(UUID.randomUUID())
-                .percentage(createDiscount.getPercentage())
-                .startDate(createDiscount.getStartDate())
-                .endDate(createDiscount.getEndDate())
+                .percentage(command.getPercentage())
+                .startDate(command.getStartDate())
+                .endDate(command.getEndDate())
                 .build();
 
         product.addDiscount(discount);

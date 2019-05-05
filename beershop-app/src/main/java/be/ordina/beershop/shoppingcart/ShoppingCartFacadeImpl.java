@@ -2,8 +2,6 @@ package be.ordina.beershop.shoppingcart;
 
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
 import static java.util.Objects.requireNonNull;
 
 @Service
@@ -22,17 +20,17 @@ class ShoppingCartFacadeImpl implements ShoppingCartFacade {
     }
 
     @Override
-    public void addProduct(UUID customerId, AddProductToShoppingCart addProductToShoppingCart) {
-        addProductToShoppingCartUseCase.execute(customerId, addProductToShoppingCart);
+    public void addProduct(String customerId, AddProductToShoppingCartCommand command) {
+        addProductToShoppingCartUseCase.execute(customerId, command);
     }
 
     @Override
-    public void removeProduct(UUID customerId, UUID productId) {
+    public void removeProduct(String customerId, String productId) {
         removeProductFromShoppingCartUseCase.execute(customerId, productId);
     }
 
     @Override
-    public void changeQuantityOfProduct(UUID customerId, ChangeQuantityOfProductInShoppingCart changeQuantityOfProductInShoppingCart) {
-        changeQuantityOfProductInShoppingCartUseCase.execute(customerId, changeQuantityOfProductInShoppingCart);
+    public void changeQuantityOfProduct(String customerId, ChangeQuantityOfProductInShoppingCartCommand command) {
+        changeQuantityOfProductInShoppingCartUseCase.execute(customerId, command);
     }
 }

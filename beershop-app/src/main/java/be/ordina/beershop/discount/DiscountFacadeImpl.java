@@ -14,7 +14,7 @@ class DiscountFacadeImpl implements DiscountFacade {
     }
 
     @Override
-    public void createDiscount(CreateDiscount createDiscount) {
-        createDiscountUseCase.execute(createDiscount);
+    public void createDiscount(CreateDiscountCommand command) {
+        createDiscountUseCase.execute(command);
     }
 }

@@ -18,7 +18,7 @@ class PayOrderUseCase {
     }
 
     @Transactional
-    void execute(UUID orderId) {
-        beerShopService.payOrder(orderId);
+    void execute(String orderId) {
+        beerShopService.payOrder(UUID.fromString(orderId));
     }
 }
