@@ -1,6 +1,5 @@
-package be.ordina.beershop.exception.rest;
+package be.ordina.beershop.exception;
 
-import be.ordina.beershop.exception.BusinessException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.core.annotation.AnnotationUtils;

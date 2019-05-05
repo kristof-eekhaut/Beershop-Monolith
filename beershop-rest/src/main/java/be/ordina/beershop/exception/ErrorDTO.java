@@ -1,7 +1,4 @@
-package be.ordina.beershop.exception.rest;
-
-import be.ordina.beershop.exception.BusinessErrorCode;
-import be.ordina.beershop.exception.ErrorCode;
+package be.ordina.beershop.exception;
 
 public class ErrorDTO {
 
