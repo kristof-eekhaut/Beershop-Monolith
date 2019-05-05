@@ -15,7 +15,6 @@ import org.springframework.http.MediaType;
 import java.util.UUID;
 
 import static be.ordina.beershop.order.LineItemMatcher.matchesLineItem;
-import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -75,9 +74,10 @@ public class RemoveItemFromShoppingCartITest extends IntegrationTest {
             Customer updateCustomer = customerRepository.findById(customer.getId()).get();
             ShoppingCart shoppingCart = updateCustomer.getShoppingCart();
 
-            assertThat(shoppingCart.getLineItems(), containsInAnyOrder(
+            assertThat(shoppingCart.getLineItems(), hasSize(1));
+            assertThat(shoppingCart.getLineItems().get(0),
                     matchesLineItem(LineItemTestData.lineItem(westmalle).build())
-            ));
+            );
         });
     }
 
@@ -103,9 +103,10 @@ public class RemoveItemFromShoppingCartITest extends IntegrationTest {
             Customer updateCustomer = customerRepository.findById(customer.getId()).get();
             ShoppingCart shoppingCart = updateCustomer.getShoppingCart();
 
-            assertThat(shoppingCart.getLineItems(), containsInAnyOrder(
+            assertThat(shoppingCart.getLineItems(), hasSize(1));
+            assertThat(shoppingCart.getLineItems().get(0),
                     matchesLineItem(lineItem)
-            ));
+            );
         });
     }
 

@@ -23,7 +23,6 @@ public class DiscountMatcher extends BaseEntityMatcher<Discount> {
 
     @Override
     protected void describeToEntity(Description description, Discount discount) {
-        appendField(description, "id", discount.getId()).appendText(",");
         appendField(description, "percentage", discount.getPercentage()).appendText(",");
         appendField(description, "startDate", discount.getStartDate()).appendText(",");
         appendField(description, "endDate", discount.getEndDate()).appendText(",");

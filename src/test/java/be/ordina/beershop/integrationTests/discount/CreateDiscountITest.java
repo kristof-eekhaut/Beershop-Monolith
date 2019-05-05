@@ -14,7 +14,7 @@ import java.util.UUID;
 
 import static be.ordina.beershop.discount.DiscountMatcher.matchesDiscount;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -42,13 +42,15 @@ public class CreateDiscountITest extends IntegrationTest {
 
         runInTransaction(() -> {
             Product updatedProduct = productRepository.findById(karmeliet.getId()).get();
-            assertThat(updatedProduct.getDiscounts(), containsInAnyOrder(
+
+            assertThat(updatedProduct.getDiscounts(), hasSize(1));
+            assertThat(updatedProduct.getDiscounts().get(0),
                     matchesDiscount(Discount.builder()
                             .percentage(new BigDecimal("15.00"))
                             .startDate(LocalDate.of(2018, 1, 1).atStartOfDay(ZoneId.systemDefault()))
                             .endDate(LocalDate.of(2018, 12, 31).atStartOfDay(ZoneId.systemDefault()))
                             .build())
-            ));
+            );
         });
     }
 

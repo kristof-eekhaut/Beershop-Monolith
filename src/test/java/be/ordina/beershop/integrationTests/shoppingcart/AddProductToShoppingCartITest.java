@@ -45,13 +45,14 @@ public class AddProductToShoppingCartITest extends IntegrationTest {
             Customer updateCustomer = customerRepository.findById(customer.getId()).get();
             ShoppingCart shoppingCart = updateCustomer.getShoppingCart();
 
-            assertThat(shoppingCart.getLineItems(), containsInAnyOrder(
+            assertThat(shoppingCart.getLineItems(), hasSize(1));
+            assertThat(shoppingCart.getLineItems().get(0),
                     matchesLineItem(LineItem.builder()
                             .product(karmeliet)
                             .quantity(5)
                             .price(new BigDecimal("6.00"))
                             .build())
-            ));
+            );
         });
     }
 
