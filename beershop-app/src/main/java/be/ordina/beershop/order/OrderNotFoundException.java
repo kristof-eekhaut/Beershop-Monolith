@@ -1,13 +1,10 @@
 package be.ordina.beershop.order;
 
-import be.ordina.beershop.exception.BusinessException;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import be.ordina.beershop.exception.EntityNotFoundException;
 
 import java.util.UUID;
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
-public class OrderNotFoundException extends BusinessException {
+public class OrderNotFoundException extends EntityNotFoundException {
 
     public static final OrderErrorCode ERROR_CODE = OrderErrorCode.ORDER_NOT_FOUND;
 

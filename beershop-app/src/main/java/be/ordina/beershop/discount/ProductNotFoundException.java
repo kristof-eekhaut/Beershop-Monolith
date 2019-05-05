@@ -1,13 +1,10 @@
 package be.ordina.beershop.discount;
 
-import be.ordina.beershop.exception.BusinessException;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import be.ordina.beershop.exception.EntityNotFoundException;
 
 import java.util.UUID;
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
-public class ProductNotFoundException extends BusinessException {
+public class ProductNotFoundException extends EntityNotFoundException {
 
     public static final DiscountErrorCode ERROR_CODE = DiscountErrorCode.PRODUCT_NOT_FOUND;
 

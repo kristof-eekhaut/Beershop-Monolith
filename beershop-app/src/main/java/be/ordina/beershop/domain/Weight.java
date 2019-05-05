@@ -6,7 +6,6 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 import static org.apache.commons.lang3.builder.EqualsBuilder.reflectionEquals;
@@ -17,11 +16,9 @@ import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToStrin
 public class Weight {
 
     @Column(name = "AMOUNT")
-    @NotNull
     private BigDecimal amount;
     @Column(name = "UNIT")
     @Enumerated(value = EnumType.STRING)
-    @NotNull
     private WeightUnit unit;
 
     public BigDecimal getAmount() {

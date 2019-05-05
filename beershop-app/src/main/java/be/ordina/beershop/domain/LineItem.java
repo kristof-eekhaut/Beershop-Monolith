@@ -1,12 +1,6 @@
 package be.ordina.beershop.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -20,11 +14,9 @@ public class LineItem {
 
     @JoinColumn(name = "PRODUCT_ID")
     @OneToOne
-    @NotNull
     private Product product;
 
     @Column(name = "QUANTITY")
-    @Min(value = 1)
     private int quantity;
 
     @Column(name = "PRICE")
@@ -96,12 +88,12 @@ public class LineItem {
             return this;
         }
 
-        public Builder product(@NotNull Product product) {
+        public Builder product(Product product) {
             this.product = product;
             return this;
         }
 
-        public Builder quantity(@Min(value = 1) int quantity) {
+        public Builder quantity(int quantity) {
             this.quantity = quantity;
             return this;
         }

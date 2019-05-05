@@ -2,23 +2,18 @@ package be.ordina.beershop.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
 @Embeddable
 public class Address {
 
     @Column(name = "STREET")
-    @NotBlank
     private String street;
     @Column(name = "NUMBER")
-    @NotBlank
     private String number;
     @Column(name = "POSTAL_CODE")
-    @NotBlank
     private String postalCode;
     @Column(name = "COUNTRY")
-    @NotBlank
     private String country;
 
     public Address() {
@@ -85,30 +80,30 @@ public class Address {
     }
 
     public static final class Builder {
-        private @NotBlank String street;
-        private @NotBlank String number;
-        private @NotBlank String postalCode;
-        private @NotBlank String country;
+        private String street;
+        private String number;
+        private String postalCode;
+        private String country;
 
         private Builder() {
         }
 
-        public Builder street(@NotBlank String street) {
+        public Builder street(String street) {
             this.street = street;
             return this;
         }
 
-        public Builder number(@NotBlank String number) {
+        public Builder number(String number) {
             this.number = number;
             return this;
         }
 
-        public Builder postalCode(@NotBlank String postalCode) {
+        public Builder postalCode(String postalCode) {
             this.postalCode = postalCode;
             return this;
         }
 
-        public Builder country(@NotBlank String country) {
+        public Builder country(String country) {
             this.country = country;
             return this;
         }

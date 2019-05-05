@@ -1,13 +1,10 @@
 package be.ordina.beershop.shoppingcart;
 
-import be.ordina.beershop.exception.BusinessException;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import be.ordina.beershop.exception.EntityNotFoundException;
 
 import java.util.UUID;
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
-public class CustomerNotFoundException extends BusinessException {
+public class CustomerNotFoundException extends EntityNotFoundException {
 
     public static final ShoppingCartErrorCode ERROR_CODE = ShoppingCartErrorCode.CUSTOMER_NOT_FOUND;
 

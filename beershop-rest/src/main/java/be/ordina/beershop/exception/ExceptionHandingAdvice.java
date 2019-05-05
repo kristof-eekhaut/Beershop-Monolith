@@ -2,12 +2,10 @@ package be.ordina.beershop.exception;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
@@ -18,12 +16,11 @@ public class ExceptionHandingAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorDTO> handleBusinessException(BusinessException businessException) {
 
-        LOGGER.error(businessException.getErrorCode(), businessException);
+        LOGGER.error(businessException.getErrorCode().getCode(), businessException);
 
         HttpStatus httpStatus;
-        ResponseStatus responseStatusAnnotation = AnnotationUtils.findAnnotation(businessException.getClass(), ResponseStatus.class);
-        if (responseStatusAnnotation != null) {
-            httpStatus = responseStatusAnnotation.code();
+        if (businessException instanceof  EntityNotFoundException) {
+            httpStatus = HttpStatus.NOT_FOUND;
         } else {
             httpStatus = HttpStatus.BAD_REQUEST;
         }
