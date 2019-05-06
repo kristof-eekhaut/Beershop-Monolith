@@ -11,8 +11,6 @@ public interface Repository<ID extends Identifier<?>, AR extends AggregateRoot<I
 
     void add(AR aggregateRoot);
     void update(AR aggregateRoot);
-    void remove(AR aggregateRoot);
-    void remove(ID aggregateRootId);
 
     Optional<AR> findById(ID aggregateRootId);
     Page<AR> findAll(Pageable pageable);

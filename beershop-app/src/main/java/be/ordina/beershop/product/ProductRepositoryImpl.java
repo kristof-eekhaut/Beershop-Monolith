@@ -5,6 +5,7 @@ import be.ordina.beershop.repository.JPAProductDAO;
 import be.ordina.beershop.repository.entities.JPADiscount;
 import be.ordina.beershop.repository.entities.JPAProduct;
 import be.ordina.beershop.repository.entities.JPAWeight;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -18,8 +19,9 @@ import static be.ordina.beershop.product.ProductId.productId;
 public class ProductRepositoryImpl extends AbstractJPARepository<ProductId, Product, UUID, JPAProduct>
         implements ProductRepository {
 
-    public ProductRepositoryImpl(JPAProductDAO jpaProductDAO) {
-        super(jpaProductDAO);
+    public ProductRepositoryImpl(JPAProductDAO jpaProductDAO,
+                                 ApplicationEventPublisher eventPublisher) {
+        super(jpaProductDAO, eventPublisher);
     }
 
     @Override

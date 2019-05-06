@@ -3,6 +3,7 @@ package be.ordina.beershop.repository;
 import be.ordina.beershop.domain.AggregateRoot;
 import be.ordina.beershop.domain.Identifier;
 import be.ordina.beershop.domain.Repository;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,31 +16,27 @@ public abstract class AbstractJPARepository<AR_ID extends Identifier<JPA_ID>, AR
         implements Repository<AR_ID, AR> {
 
     private JpaRepository<JPA_ENTITY, JPA_ID> jpaRepository;
+    private ApplicationEventPublisher eventPublisher;
 
-    protected AbstractJPARepository(JpaRepository<JPA_ENTITY, JPA_ID> jpaRepository) {
+    protected AbstractJPARepository(JpaRepository<JPA_ENTITY, JPA_ID> jpaRepository,
+                                    ApplicationEventPublisher eventPublisher) {
         this.jpaRepository = requireNonNull(jpaRepository);
+        this.eventPublisher = requireNonNull(eventPublisher);
     }
 
     @Override
     public final void add(AR aggregateRoot) {
         jpaRepository.save(createJPAEntity(aggregateRoot));
+
+        publishEvents(aggregateRoot);
     }
 
     @Override
     public final void update(AR aggregateRoot) {
         JPA_ENTITY jpaEntity = jpaRepository.getOne(aggregateRoot.getId().getValue());
         jpaRepository.save(mapToJPAEntity(aggregateRoot, jpaEntity));
-    }
 
-    @Override
-    public void remove(AR_ID aggregateRootId) {
-        JPA_ENTITY jpaEntity = jpaRepository.getOne(aggregateRootId.getValue());
-        jpaRepository.delete(jpaEntity);
-    }
-
-    @Override
-    public void remove(AR aggregateRoot) {
-        remove(aggregateRoot.getId());
+        publishEvents(aggregateRoot);
     }
 
     @Override
@@ -60,6 +57,11 @@ public abstract class AbstractJPARepository<AR_ID extends Identifier<JPA_ID>, AR
 
     protected JpaRepository<JPA_ENTITY, JPA_ID> getJpaRepository() {
         return jpaRepository;
+    }
+
+    private void publishEvents(AR aggregateRoot) {
+        aggregateRoot.getRegisteredEvents()
+                .forEach(eventPublisher::publishEvent);
     }
 
     private JPA_ENTITY createJPAEntity(AR from) {
