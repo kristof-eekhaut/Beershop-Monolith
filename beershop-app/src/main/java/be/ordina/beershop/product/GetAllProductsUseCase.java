@@ -1,9 +1,6 @@
 package be.ordina.beershop.product;
 
-import be.ordina.beershop.domain.Product;
-import be.ordina.beershop.domain.Weight;
 import be.ordina.beershop.product.dto.WeightDTO;
-import be.ordina.beershop.repository.ProductRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;

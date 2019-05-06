@@ -1,14 +1,13 @@
 package be.ordina.beershop.discount;
 
 import be.ordina.beershop.exception.EntityNotFoundException;
-
-import java.util.UUID;
+import be.ordina.beershop.product.ProductId;
 
 public class ProductNotFoundException extends EntityNotFoundException {
 
     public static final DiscountErrorCode ERROR_CODE = DiscountErrorCode.PRODUCT_NOT_FOUND;
 
-    public ProductNotFoundException(UUID productId) {
-        super(ERROR_CODE, "Product not found: " + productId);
+    public ProductNotFoundException(ProductId productId) {
+        super(ERROR_CODE.getCode(), "Product not found: " + productId);
     }
 }

@@ -9,6 +9,6 @@ public class CustomerNotFoundException extends BusinessException {
     public static final OrderErrorCode ERROR_CODE = OrderErrorCode.CUSTOMER_NOT_FOUND;
 
     public CustomerNotFoundException(UUID customerId) {
-        super(ERROR_CODE, "Customer not found: " + customerId);
+        super(ERROR_CODE.getCode(), "Customer not found: " + customerId);
     }
 }

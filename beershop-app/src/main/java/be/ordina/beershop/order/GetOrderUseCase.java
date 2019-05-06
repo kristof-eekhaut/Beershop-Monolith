@@ -1,8 +1,8 @@
 package be.ordina.beershop.order;
 
-import be.ordina.beershop.domain.Address;
-import be.ordina.beershop.domain.LineItem;
-import be.ordina.beershop.domain.Order;
+import be.ordina.beershop.repository.entities.Address;
+import be.ordina.beershop.repository.entities.LineItem;
+import be.ordina.beershop.repository.entities.Order;
 import be.ordina.beershop.order.dto.LineItemDTO;
 import be.ordina.beershop.order.dto.ShipmentAddressDTO;
 import be.ordina.beershop.repository.OrderRepository;

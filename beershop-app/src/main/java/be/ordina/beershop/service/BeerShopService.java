@@ -1,12 +1,12 @@
 package be.ordina.beershop.service;
 
-import be.ordina.beershop.domain.*;
 import be.ordina.beershop.order.CreateOrderCommand;
 import be.ordina.beershop.order.CustomerNotFoundException;
 import be.ordina.beershop.order.OrderNotFoundException;
 import be.ordina.beershop.repository.CustomerRepository;
+import be.ordina.beershop.repository.entities.*;
 import be.ordina.beershop.repository.OrderRepository;
-import be.ordina.beershop.repository.ProductRepository;
+import be.ordina.beershop.repository.JPAProductDAO;
 import be.ordina.beershop.shoppingcart.AddProductToShoppingCartCommand;
 import be.ordina.beershop.shoppingcart.ChangeQuantityOfProductInShoppingCartCommand;
 import be.ordina.beershop.shoppingcart.ProductNotFoundException;
@@ -36,7 +36,7 @@ public class BeerShopService {
     private static final int LEGAL_DRINKING_AGE = 18;
 
     @Autowired
-    private ProductRepository productRepository;
+    private JPAProductDAO productRepository;
     @Autowired
     private OrderRepository orderRepository;
     @Autowired
@@ -167,13 +167,13 @@ public class BeerShopService {
         lineItem.setPrice(linePriceTotal);
     }
 
-    private BigDecimal calculateProductPrice(final Product product) {
-        final Discount activeDiscount = product
+    private BigDecimal calculateProductPrice(final JPAProduct product) {
+        final JPADiscount activeDiscount = product
                 .getDiscounts()
                 .stream()
                 .filter(discount -> discount.getStartDate().isBefore(now()) && discount.getEndDate().isAfter(now()))
                 .findFirst()
-                .orElse(Discount.NONE);
+                .orElse(JPADiscount.NONE);
         final BigDecimal discountPercentage = activeDiscount.getPercentage().divide(BigDecimal.valueOf(100),
                 UNNECESSARY);
         final BigDecimal discountAmount = product.getPrice().multiply(discountPercentage);

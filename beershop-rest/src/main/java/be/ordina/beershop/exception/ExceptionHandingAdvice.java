@@ -16,7 +16,7 @@ public class ExceptionHandingAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorDTO> handleBusinessException(BusinessException businessException) {
 
-        LOGGER.error(businessException.getErrorCode().getCode(), businessException);
+        LOGGER.error(businessException.getErrorCode(), businessException);
 
         HttpStatus httpStatus;
         if (businessException instanceof  EntityNotFoundException) {

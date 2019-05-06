@@ -1,7 +1,7 @@
 package be.ordina.beershop.customer;
 
-import be.ordina.beershop.common.AddressTestData;
-import be.ordina.beershop.domain.Customer;
+import be.ordina.beershop.domain.AddressTestData;
+import be.ordina.beershop.repository.entities.Customer;
 
 import java.time.LocalDate;
 import java.util.UUID;

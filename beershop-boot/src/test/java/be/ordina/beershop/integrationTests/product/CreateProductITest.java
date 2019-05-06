@@ -1,18 +1,17 @@
 package be.ordina.beershop.integrationTests.product;
 
-import be.ordina.beershop.domain.Product;
-import be.ordina.beershop.domain.WeightUnit;
 import be.ordina.beershop.integrationTests.IntegrationTest;
 import be.ordina.beershop.product.CreateProduct;
-import be.ordina.beershop.product.ProductMatcher;
-import org.hamcrest.MatcherAssert;
+import be.ordina.beershop.product.JPAProductMatcher;
+import be.ordina.beershop.product.WeightUnit;
+import be.ordina.beershop.repository.entities.JPAProduct;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-import static be.ordina.beershop.domain.Weight.weight;
+import static be.ordina.beershop.repository.entities.JPAWeight.weight;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -34,11 +33,11 @@ public class CreateProductITest extends IntegrationTest {
                 .andExpect(status().isCreated());
 
         runInTransaction(() -> {
-            List<Product> persistedProducts = productRepository.findAll();
+            List<JPAProduct> persistedProducts = jpaProductDAO.findAll();
             assertThat(persistedProducts, hasSize(1));
 
-            Product createdProduct = persistedProducts.get(0);
-            MatcherAssert.assertThat(createdProduct, ProductMatcher.matchesProduct(Product.builder()
+            JPAProduct createdProduct = persistedProducts.get(0);
+            assertThat(createdProduct, JPAProductMatcher.matchesProduct(JPAProduct.builder()
                     .name("Karmeliet Tripel")
                     .quantity(10)
                     .price(new BigDecimal("1.20"))
@@ -61,7 +60,7 @@ public class CreateProductITest extends IntegrationTest {
                 .andExpect(status().is4xxClientError());
 
         runInTransaction(() -> {
-            List<Product> persistedProducts = productRepository.findAll();
+            List<JPAProduct> persistedProducts = jpaProductDAO.findAll();
             assertThat(persistedProducts, hasSize(0));
         });
     }
@@ -79,7 +78,7 @@ public class CreateProductITest extends IntegrationTest {
                 .andExpect(status().is4xxClientError());
 
         runInTransaction(() -> {
-            List<Product> persistedProducts = productRepository.findAll();
+            List<JPAProduct> persistedProducts = jpaProductDAO.findAll();
             assertThat(persistedProducts, hasSize(0));
         });
     }
@@ -97,7 +96,7 @@ public class CreateProductITest extends IntegrationTest {
                 .andExpect(status().is4xxClientError());
 
         runInTransaction(() -> {
-            List<Product> persistedProducts = productRepository.findAll();
+            List<JPAProduct> persistedProducts = jpaProductDAO.findAll();
             assertThat(persistedProducts, hasSize(0));
         });
     }
@@ -115,7 +114,7 @@ public class CreateProductITest extends IntegrationTest {
                 .andExpect(status().is4xxClientError());
 
         runInTransaction(() -> {
-            List<Product> persistedProducts = productRepository.findAll();
+            List<JPAProduct> persistedProducts = jpaProductDAO.findAll();
             assertThat(persistedProducts, hasSize(0));
         });
     }
@@ -133,7 +132,7 @@ public class CreateProductITest extends IntegrationTest {
                 .andExpect(status().is4xxClientError());
 
         runInTransaction(() -> {
-            List<Product> persistedProducts = productRepository.findAll();
+            List<JPAProduct> persistedProducts = jpaProductDAO.findAll();
             assertThat(persistedProducts, hasSize(0));
         });
     }
@@ -151,7 +150,7 @@ public class CreateProductITest extends IntegrationTest {
                 .andExpect(status().is4xxClientError());
 
         runInTransaction(() -> {
-            List<Product> persistedProducts = productRepository.findAll();
+            List<JPAProduct> persistedProducts = jpaProductDAO.findAll();
             assertThat(persistedProducts, hasSize(0));
         });
     }

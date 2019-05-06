@@ -1,7 +1,7 @@
 package be.ordina.beershop.repository;
 
-import be.ordina.beershop.domain.Order;
-import be.ordina.beershop.domain.OrderStatus;
+import be.ordina.beershop.repository.entities.Order;
+import be.ordina.beershop.repository.entities.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

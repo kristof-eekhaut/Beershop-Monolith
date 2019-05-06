@@ -1,12 +1,9 @@
 package be.ordina.beershop.integrationTests;
 
-import be.ordina.beershop.domain.Customer;
-import be.ordina.beershop.domain.Order;
-import be.ordina.beershop.domain.Product;
-import be.ordina.beershop.repository.CustomerRepository;
-import be.ordina.beershop.repository.OrderRepository;
-import be.ordina.beershop.repository.ProductRepository;
-import be.ordina.beershop.repository.ShoppingCartRepository;
+import be.ordina.beershop.repository.entities.Customer;
+import be.ordina.beershop.repository.entities.Order;
+import be.ordina.beershop.repository.*;
+import be.ordina.beershop.repository.entities.JPAProduct;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +32,7 @@ public abstract class IntegrationTest {
     protected ObjectMapper objectMapper;
 
     @Autowired
-    protected ProductRepository productRepository;
+    protected JPAProductDAO jpaProductDAO;
     @Autowired
     protected OrderRepository orderRepository;
     @Autowired
@@ -43,8 +40,8 @@ public abstract class IntegrationTest {
     @Autowired
     protected ShoppingCartRepository shoppingCartRepository;
 
-    protected Product persistProduct(Product product) {
-        return runInTransaction(() -> productRepository.save(product));
+    protected JPAProduct persistProduct(JPAProduct product) {
+        return runInTransaction(() -> jpaProductDAO.save(product));
     }
 
     protected Order persistOrder(Order order) {

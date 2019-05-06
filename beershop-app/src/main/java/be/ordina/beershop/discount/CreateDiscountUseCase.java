@@ -1,13 +1,11 @@
 package be.ordina.beershop.discount;
 
-import be.ordina.beershop.domain.Discount;
-import be.ordina.beershop.domain.Product;
-import be.ordina.beershop.repository.ProductRepository;
+import be.ordina.beershop.product.Product;
+import be.ordina.beershop.product.ProductId;
+import be.ordina.beershop.product.ProductRepository;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
-
-import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;
 
@@ -22,22 +20,15 @@ class CreateDiscountUseCase {
 
     @Transactional
     void execute(CreateDiscountCommand command) {
-        UUID productId = UUID.fromString(command.getProductId());
+        ProductId productId = ProductId.fromString(command.getProductId());
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException(productId));
 
-        addDiscount(product, command);
-        productRepository.save(product);
-    }
-
-    private void addDiscount(Product product, CreateDiscountCommand command) {
-        Discount discount = Discount.builder()
-                .id(UUID.randomUUID())
-                .percentage(command.getPercentage())
-                .startDate(command.getStartDate())
-                .endDate(command.getEndDate())
-                .build();
-
-        product.addDiscount(discount);
+        product.addDiscount(
+                command.getPercentage(),
+                command.getStartDate(),
+                command.getEndDate()
+        );
+        productRepository.update(product);
     }
 }

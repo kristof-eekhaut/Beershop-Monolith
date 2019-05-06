@@ -1,7 +1,7 @@
 package be.ordina.beershop.integrationTests.product;
 
 import be.ordina.beershop.integrationTests.IntegrationTest;
-import be.ordina.beershop.product.ProductTestData;
+import be.ordina.beershop.product.JPAProductTestData;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -26,7 +26,7 @@ public class GetProductsITest extends IntegrationTest {
     @Test
     public void whenOneProductExists_thenPageWith1Item() throws Exception {
 
-        persistProduct(ProductTestData.karmeliet().build());
+        persistProduct(JPAProductTestData.karmeliet().build());
 
         mockMvc.perform(
                 get("/products"))
@@ -44,9 +44,9 @@ public class GetProductsITest extends IntegrationTest {
     @Test
     public void whenMultipleProductsExist_thenPageWithMultipleItems() throws Exception {
 
-        persistProduct(ProductTestData.karmeliet().build());
-        persistProduct(ProductTestData.westmalle().build());
-        persistProduct(ProductTestData.westvleteren().build());
+        persistProduct(JPAProductTestData.karmeliet().build());
+        persistProduct(JPAProductTestData.westmalle().build());
+        persistProduct(JPAProductTestData.westvleteren().build());
 
         mockMvc.perform(
                 get("/products"))

@@ -1,6 +1,6 @@
 package be.ordina.beershop.repository;
 
-import be.ordina.beershop.domain.Customer;
+import be.ordina.beershop.repository.entities.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;

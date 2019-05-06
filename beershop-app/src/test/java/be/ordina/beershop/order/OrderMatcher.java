@@ -1,8 +1,8 @@
 package be.ordina.beershop.order;
 
-import be.ordina.beershop.common.matcher.BaseEntityMatcher;
-import be.ordina.beershop.domain.LineItem;
-import be.ordina.beershop.domain.Order;
+import be.ordina.beershop.domain.matcher.BaseEntityMatcher;
+import be.ordina.beershop.repository.entities.LineItem;
+import be.ordina.beershop.repository.entities.Order;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 

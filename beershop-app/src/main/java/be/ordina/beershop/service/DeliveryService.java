@@ -1,6 +1,6 @@
 package be.ordina.beershop.service;
 
-import be.ordina.beershop.domain.Order;
+import be.ordina.beershop.repository.entities.Order;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

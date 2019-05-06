@@ -9,6 +9,6 @@ public class ProductNotFoundException extends BusinessException {
     public static final ShoppingCartErrorCode ERROR_CODE = ShoppingCartErrorCode.PRODUCT_NOT_FOUND;
 
     public ProductNotFoundException(UUID productId) {
-        super(ERROR_CODE, "Product not found: " + productId);
+        super(ERROR_CODE.getCode(), "Product not found: " + productId);
     }
 }

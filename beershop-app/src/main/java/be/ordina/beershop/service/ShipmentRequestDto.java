@@ -1,6 +1,6 @@
 package be.ordina.beershop.service;
 
-import be.ordina.beershop.domain.Address;
+import be.ordina.beershop.repository.entities.Address;
 
 import java.math.BigDecimal;
 

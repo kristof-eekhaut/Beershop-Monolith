@@ -1,14 +1,14 @@
 package be.ordina.beershop.integrationTests.order;
 
 import be.ordina.beershop.customer.CustomerTestData;
-import be.ordina.beershop.domain.Customer;
-import be.ordina.beershop.domain.Order;
-import be.ordina.beershop.domain.OrderStatus;
-import be.ordina.beershop.domain.Product;
+import be.ordina.beershop.repository.entities.Customer;
+import be.ordina.beershop.repository.entities.Order;
+import be.ordina.beershop.repository.entities.OrderStatus;
+import be.ordina.beershop.repository.entities.JPAProduct;
 import be.ordina.beershop.integrationTests.IntegrationTest;
 import be.ordina.beershop.order.OrderMatcher;
 import be.ordina.beershop.order.OrderTestData;
-import be.ordina.beershop.product.ProductTestData;
+import be.ordina.beershop.product.JPAProductTestData;
 import be.ordina.beershop.service.ShipmentResponseDto;
 import be.ordina.beershop.shoppingcart.ShoppingCartTestData;
 import org.hamcrest.MatcherAssert;
@@ -46,7 +46,7 @@ public class RequestShipmentITest extends IntegrationTest {
         mockServer.expect(requestTo("http://example.be/createShipment"))
                 .andRespond(withSuccess(objectMapper.writeValueAsString(new ShipmentResponseDto("123", "DELIVERED")), APPLICATION_JSON));
 
-        Product karmeliet = persistProduct(ProductTestData.karmeliet().build());
+        JPAProduct karmeliet = persistProduct(JPAProductTestData.karmeliet().build());
 
         Customer customer = persistCustomer(CustomerTestData.manVanMelle()
                 .shoppingCart(ShoppingCartTestData.cartWithItem(karmeliet).build())
@@ -73,7 +73,7 @@ public class RequestShipmentITest extends IntegrationTest {
     @Test
     public void givenPaidOrderWithNotEnoughStock_whenShipmentIsRequested_thenOrderStateIsFailed() throws Exception {
 
-        Product karmeliet = persistProduct(ProductTestData.karmeliet()
+        JPAProduct karmeliet = persistProduct(JPAProductTestData.karmeliet()
                 .quantity(0)
                 .build());
 
@@ -101,7 +101,7 @@ public class RequestShipmentITest extends IntegrationTest {
     @Test
     public void givenUnpaidOrder_whenShipmentIsRequested_thenError() throws Exception {
 
-        Product karmeliet = persistProduct(ProductTestData.karmeliet().build());
+        JPAProduct karmeliet = persistProduct(JPAProductTestData.karmeliet().build());
 
         Customer customer = persistCustomer(CustomerTestData.manVanMelle()
                 .shoppingCart(ShoppingCartTestData.cartWithItem(karmeliet).build())

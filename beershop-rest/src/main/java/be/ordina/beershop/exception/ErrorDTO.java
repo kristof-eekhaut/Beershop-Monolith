@@ -3,13 +3,13 @@ package be.ordina.beershop.exception;
 public class ErrorDTO {
 
     private String message;
-    private ErrorCode errorCode;
+    private String errorCode;
 
     public ErrorDTO(String message) {
         this.message = message;
     }
 
-    public ErrorDTO(String message, BusinessErrorCode errorCode) {
+    public ErrorDTO(String message, String errorCode) {
         this(message);
         this.errorCode = errorCode;
     }
@@ -18,7 +18,7 @@ public class ErrorDTO {
         return message;
     }
 
-    public ErrorCode getErrorCode() {
+    public String getErrorCode() {
         return errorCode;
     }
 }

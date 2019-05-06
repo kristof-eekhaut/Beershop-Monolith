@@ -1,11 +1,11 @@
 package be.ordina.beershop.integrationTests.discount;
 
 import be.ordina.beershop.discount.CreateDiscount;
-import be.ordina.beershop.discount.DiscountMatcher;
-import be.ordina.beershop.domain.Discount;
-import be.ordina.beershop.domain.Product;
+import be.ordina.beershop.discount.JPADiscountMatcher;
+import be.ordina.beershop.repository.entities.JPADiscount;
+import be.ordina.beershop.repository.entities.JPAProduct;
 import be.ordina.beershop.integrationTests.IntegrationTest;
-import be.ordina.beershop.product.ProductTestData;
+import be.ordina.beershop.product.JPAProductTestData;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.springframework.http.MediaType;
@@ -25,7 +25,7 @@ public class CreateDiscountITest extends IntegrationTest {
     @Test
     public void givenProduct_whenCreatingDiscount_thenDiscountIsAddedToProduct() throws Exception {
 
-        Product karmeliet = persistProduct(ProductTestData.karmeliet().build());
+        JPAProduct karmeliet = persistProduct(JPAProductTestData.karmeliet().build());
 
         final CreateDiscount createDiscount = CreateDiscount.builder()
                 .productId(karmeliet.getId().toString())
@@ -42,11 +42,11 @@ public class CreateDiscountITest extends IntegrationTest {
                 .andExpect(status().isOk());
 
         runInTransaction(() -> {
-            Product updatedProduct = productRepository.findById(karmeliet.getId()).get();
+            JPAProduct updatedProduct = jpaProductDAO.findById(karmeliet.getId()).get();
 
             assertThat(updatedProduct.getDiscounts(), hasSize(1));
             MatcherAssert.assertThat(updatedProduct.getDiscounts().get(0),
-                    DiscountMatcher.matchesDiscount(Discount.builder()
+                    JPADiscountMatcher.matchesDiscount(JPADiscount.builder()
                             .percentage(new BigDecimal("15.00"))
                             .startDate(LocalDate.of(2018, 1, 1))
                             .endDate(LocalDate.of(2018, 12, 31))

@@ -1,14 +1,14 @@
 package be.ordina.beershop.integrationTests.shoppingcart;
 
 import be.ordina.beershop.customer.CustomerTestData;
-import be.ordina.beershop.domain.Customer;
-import be.ordina.beershop.domain.LineItem;
-import be.ordina.beershop.domain.Product;
-import be.ordina.beershop.domain.ShoppingCart;
+import be.ordina.beershop.repository.entities.Customer;
+import be.ordina.beershop.repository.entities.LineItem;
+import be.ordina.beershop.repository.entities.JPAProduct;
+import be.ordina.beershop.repository.entities.ShoppingCart;
 import be.ordina.beershop.integrationTests.IntegrationTest;
 import be.ordina.beershop.order.LineItemMatcher;
 import be.ordina.beershop.order.LineItemTestData;
-import be.ordina.beershop.product.ProductTestData;
+import be.ordina.beershop.product.JPAProductTestData;
 import be.ordina.beershop.shoppingcart.ShoppingCartTestData;
 import org.junit.Test;
 import org.springframework.http.MediaType;
@@ -27,7 +27,7 @@ public class RemoveItemFromShoppingCartITest extends IntegrationTest {
     @Test
     public void givenCustomerWithItemInShoppingCart_whenRemovingItem_thenShoppingCartIsEmpty() throws Exception {
 
-        Product karmeliet = persistProduct(ProductTestData.karmeliet().build());
+        JPAProduct karmeliet = persistProduct(JPAProductTestData.karmeliet().build());
 
         LineItem lineItem = LineItemTestData.lineItem(karmeliet).build();
         Customer customer = persistCustomer(CustomerTestData.manVanMelle()
@@ -53,8 +53,8 @@ public class RemoveItemFromShoppingCartITest extends IntegrationTest {
     @Test
     public void givenCustomerWithMultipleItemsInShoppingCart_whenRemovingItem_thenItemIsRemovedAndOthersStayInShoppingCart() throws Exception {
 
-        Product karmeliet = persistProduct(ProductTestData.karmeliet().build());
-        Product westmalle = persistProduct(ProductTestData.westmalle().build());
+        JPAProduct karmeliet = persistProduct(JPAProductTestData.karmeliet().build());
+        JPAProduct westmalle = persistProduct(JPAProductTestData.westmalle().build());
 
         LineItem lineItem = LineItemTestData.lineItem(karmeliet).build();
         Customer customer = persistCustomer(CustomerTestData.manVanMelle()
@@ -84,7 +84,7 @@ public class RemoveItemFromShoppingCartITest extends IntegrationTest {
     @Test
     public void givenCustomerWithItemInShoppingCart_whenRemovingNonExistingItem_thenShoppingCartIsUnchanged() throws Exception {
 
-        Product karmeliet = persistProduct(ProductTestData.karmeliet().build());
+        JPAProduct karmeliet = persistProduct(JPAProductTestData.karmeliet().build());
 
         LineItem lineItem = LineItemTestData.lineItem(karmeliet).build();
         Customer customer = persistCustomer(CustomerTestData.manVanMelle()

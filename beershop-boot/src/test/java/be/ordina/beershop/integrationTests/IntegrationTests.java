@@ -1,11 +1,14 @@
 package be.ordina.beershop.integrationTests;
 
-import be.ordina.beershop.domain.*;
 import be.ordina.beershop.order.CreateOrder;
 import be.ordina.beershop.product.CreateProduct;
 import be.ordina.beershop.repository.CustomerRepository;
 import be.ordina.beershop.repository.OrderRepository;
-import be.ordina.beershop.repository.ProductRepository;
+import be.ordina.beershop.repository.JPAProductDAO;
+import be.ordina.beershop.repository.entities.Address;
+import be.ordina.beershop.repository.entities.Customer;
+import be.ordina.beershop.repository.entities.Order;
+import be.ordina.beershop.repository.entities.OrderStatus;
 import be.ordina.beershop.shoppingcart.AddProductToShoppingCart;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
@@ -51,12 +54,11 @@ public class IntegrationTests {
     @Autowired
     private CustomerRepository customerRepository;
     @Autowired
-    private ProductRepository productRepository;
+    private JPAProductDAO jpaProductDAO;
     @Autowired
     private OrderRepository orderRepository;
 
     private UUID customerId;
-    private UUID productId;
     private Address address;
 
     @Before
@@ -77,10 +79,6 @@ public class IntegrationTests {
         final Customer customer = new Customer();
         customer.setId(customerId);
 
-        final Weight weight = new Weight();
-        weight.setAmount(new BigDecimal("100.00"));
-        weight.setUnit(WeightUnit.GRAM);
-
         final CreateProduct createProduct = CreateProduct.builder()
                 .name("Karmeliet Tripel")
                 .quantity(10)
@@ -96,10 +94,9 @@ public class IntegrationTests {
                .andDo(print())
                .andExpect(status().isCreated());
 
-        final Product product = new Product();
-        product.setId(productRepository.findAll().get(0).getId());
+        UUID productId = jpaProductDAO.findAll().get(0).getId();
 
-        final AddProductToShoppingCart addProductToShoppingCart = new AddProductToShoppingCart(product.getId().toString(), 3);
+        final AddProductToShoppingCart addProductToShoppingCart = new AddProductToShoppingCart(productId.toString(), 3);
 
         mockMvc.perform(
                 patch("/customers/" + customerId + "/shopping-cart/add-product")

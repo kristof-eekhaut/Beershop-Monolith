@@ -1,13 +1,13 @@
 package be.ordina.beershop.integrationTests.order;
 
-import be.ordina.beershop.common.AddressTestData;
+import be.ordina.beershop.domain.AddressTestData;
 import be.ordina.beershop.customer.CustomerTestData;
-import be.ordina.beershop.domain.*;
 import be.ordina.beershop.integrationTests.IntegrationTest;
 import be.ordina.beershop.order.CreateOrder;
 import be.ordina.beershop.order.LineItemTestData;
 import be.ordina.beershop.order.OrderMatcher;
-import be.ordina.beershop.product.ProductTestData;
+import be.ordina.beershop.product.JPAProductTestData;
+import be.ordina.beershop.repository.entities.*;
 import be.ordina.beershop.shoppingcart.ShoppingCartTestData;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
@@ -27,8 +27,8 @@ public class CreateOrderITest extends IntegrationTest {
     @Test
     public void givenCustomerWithShoppingCart_whenCreatingNewOrder_thenOrderIsCreatedAndShoppingCartIsCleared() throws Exception {
 
-        Product karmeliet = persistProduct(ProductTestData.karmeliet().build());
-        Product westmalle = persistProduct(ProductTestData.westmalle().build());
+        JPAProduct karmeliet = persistProduct(JPAProductTestData.karmeliet().build());
+        JPAProduct westmalle = persistProduct(JPAProductTestData.westmalle().build());
 
         Customer customer = persistCustomer(CustomerTestData.manVanMelle()
                 .shoppingCart(ShoppingCartTestData.emptyCart()
