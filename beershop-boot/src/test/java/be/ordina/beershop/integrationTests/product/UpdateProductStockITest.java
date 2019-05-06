@@ -3,7 +3,7 @@ package be.ordina.beershop.integrationTests.product;
 import be.ordina.beershop.repository.entities.JPAProduct;
 import be.ordina.beershop.product.WeightUnit;
 import be.ordina.beershop.integrationTests.IntegrationTest;
-import be.ordina.beershop.product.ProductErrorCode;
+import be.ordina.beershop.product.exception.ProductErrorCode;
 import be.ordina.beershop.product.JPAProductMatcher;
 import be.ordina.beershop.product.JPAProductTestData;
 import be.ordina.beershop.product.UpdateProductStock;

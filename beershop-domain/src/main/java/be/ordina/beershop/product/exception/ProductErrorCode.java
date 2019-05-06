@@ -1,4 +1,4 @@
-package be.ordina.beershop.product;
+package be.ordina.beershop.product.exception;
 
 import be.ordina.beershop.domain.exception.DomainErrorCode;
 

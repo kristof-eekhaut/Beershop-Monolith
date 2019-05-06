@@ -3,11 +3,13 @@ package be.ordina.beershop.product;
 import be.ordina.beershop.domain.AbstractAggregateRoot;
 import be.ordina.beershop.product.event.ProductCreatedEvent;
 import be.ordina.beershop.product.event.ProductStockChangedEvent;
+import be.ordina.beershop.product.exception.InvalidProductQuantityException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
@@ -33,22 +35,12 @@ public class Product extends AbstractAggregateRoot<ProductId> {
 
         registerEvent(ProductCreatedEvent.builder()
                 .productId(getId())
-                .name(getName())
-                .alcoholPercentage(getAlcoholPercentage())
-                .weight(getWeight())
-                .quantity(getQuantity())
-                .price(getPrice())
+                .name(name)
+                .alcoholPercentage(alcoholPercentage)
+                .weight(weight)
+                .quantity(quantity)
+                .price(price)
                 .build());
-    }
-
-    public void changeStockQuantity(int quantity) {
-        if (quantity < 0) {
-            throw new InvalidProductQuantityException("Quantity can not be less than 0.");
-        }
-
-        setQuantity(quantity);
-
-        registerEvent(new ProductStockChangedEvent(getId(), getQuantity()));
     }
 
     public String getName() {
@@ -63,25 +55,16 @@ public class Product extends AbstractAggregateRoot<ProductId> {
         return price;
     }
 
-    public Weight getWeight() {
-        return weight;
-    }
-
-    public void addDiscount(BigDecimal percentage, LocalDate startDate, LocalDate endDate) {
-        Discount discount = Discount.builder()
-                .percentage(percentage)
-                .startDate(startDate)
-                .endDate(endDate)
-                .build();
-        discounts.add(discount);
+    public Optional<Weight> getWeight() {
+        return Optional.ofNullable(weight);
     }
 
     public List<Discount> getDiscounts() {
         return new ArrayList<>(discounts);
     }
 
-    public BigDecimal getAlcoholPercentage() {
-        return alcoholPercentage;
+    public Optional<BigDecimal> getAlcoholPercentage() {
+        return Optional.ofNullable(alcoholPercentage);
     }
 
     public QuantityIndicator getQuantityIndicator() {
@@ -94,11 +77,30 @@ public class Product extends AbstractAggregateRoot<ProductId> {
         }
     }
 
+    public void changeStockQuantity(int quantity) {
+        setQuantity(quantity);
+
+        registerEvent(new ProductStockChangedEvent(getId(), quantity));
+    }
+
+    @Deprecated // TODO: create separate Discount Aggregate
+    public void addDiscount(BigDecimal percentage, LocalDate startDate, LocalDate endDate) {
+        Discount discount = Discount.builder()
+                .percentage(percentage)
+                .startDate(startDate)
+                .endDate(endDate)
+                .build();
+        discounts.add(discount);
+    }
+
     private void setName(String name) {
         this.name = requireNonNull(name);
     }
 
     private void setQuantity(int quantity) {
+        if (quantity < 0) {
+            throw new InvalidProductQuantityException("Quantity can not be less than 0.");
+        }
         this.quantity = quantity;
     }
 

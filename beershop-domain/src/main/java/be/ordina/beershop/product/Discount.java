@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 import static java.util.Objects.requireNonNull;
 
-class Discount extends AbstractValueObject {
+public class Discount extends AbstractValueObject {
 
     public static final Discount NONE = Discount.builder().percentage(BigDecimal.ZERO).startDate(LocalDate.now()).endDate(LocalDate.now()).build();
 
