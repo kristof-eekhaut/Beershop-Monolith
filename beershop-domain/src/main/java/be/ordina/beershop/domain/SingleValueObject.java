@@ -4,7 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 public abstract class SingleValueObject<T> extends AbstractValueObject {
 
-    private T value;
+    private final T value;
 
     protected SingleValueObject(T value) {
         this.value = requireNonNull(value);

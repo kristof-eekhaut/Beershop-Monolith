@@ -17,10 +17,6 @@ public class Customer {
     @Column(name = "BIRTH_DATE")
     private LocalDate birthDate;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "SHOPPING_CART_ID")
-    private ShoppingCart shoppingCart = new ShoppingCart();
-
     @Embedded
     private Address address;
 
@@ -32,7 +28,6 @@ public class Customer {
         setId(builder.id);
         setName(builder.name);
         setBirthDate(builder.birthDate);
-        setShoppingCart(builder.shoppingCart);
         setAddress(builder.address);
     }
 
@@ -60,14 +55,6 @@ public class Customer {
         this.address = address;
     }
 
-    public ShoppingCart getShoppingCart() {
-        return shoppingCart;
-    }
-
-    public void setShoppingCart(final ShoppingCart shoppingCart) {
-        this.shoppingCart = shoppingCart;
-    }
-
     public LocalDate getBirthDate() {
         return birthDate;
     }
@@ -84,7 +71,6 @@ public class Customer {
         private UUID id;
         private String name;
         private LocalDate birthDate;
-        private ShoppingCart shoppingCart = new ShoppingCart();
         private Address address;
 
         private Builder() {
@@ -102,11 +88,6 @@ public class Customer {
 
         public Builder birthDate(LocalDate birthDate) {
             this.birthDate = birthDate;
-            return this;
-        }
-
-        public Builder shoppingCart(ShoppingCart shoppingCart) {
-            this.shoppingCart = shoppingCart;
             return this;
         }
 

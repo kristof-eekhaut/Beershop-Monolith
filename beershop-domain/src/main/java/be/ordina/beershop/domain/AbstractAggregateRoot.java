@@ -3,7 +3,7 @@ package be.ordina.beershop.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractAggregateRoot<ID extends Identifier<?>> extends AbstractEntity<ID>
+public abstract class AbstractAggregateRoot<ID extends Identifier> extends AbstractEntity<ID>
         implements AggregateRoot<ID> {
 
     private List<DomainEvent> registeredDomainEvents = new ArrayList<>();

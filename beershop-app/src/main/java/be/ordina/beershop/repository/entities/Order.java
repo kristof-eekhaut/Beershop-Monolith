@@ -30,7 +30,7 @@ public class Order {
     private Customer customer;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<LineItem> lineItems;
+    private List<JPAShoppingCartItem> lineItems;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus state;
@@ -74,11 +74,11 @@ public class Order {
         this.customer = customer;
     }
 
-    public List<LineItem> getLineItems() {
+    public List<JPAShoppingCartItem> getLineItems() {
         return new ArrayList<>(lineItems);
     }
 
-    public void setLineItems(List<LineItem> lineItems) {
+    public void setLineItems(List<JPAShoppingCartItem> lineItems) {
         this.lineItems = lineItems;
     }
 
@@ -121,7 +121,7 @@ public class Order {
     public static final class Builder {
         private UUID id;
         private Customer customer;
-        private List<LineItem> lineItems = new ArrayList<>();
+        private List<JPAShoppingCartItem> lineItems = new ArrayList<>();
         private OrderStatus state;
         private LocalDateTime createdOn;
         private Address address;
@@ -140,12 +140,12 @@ public class Order {
             return this;
         }
 
-        public Builder lineItems(List<LineItem> lineItems) {
+        public Builder lineItems(List<JPAShoppingCartItem> lineItems) {
             this.lineItems = lineItems;
             return this;
         }
 
-        public Builder lineItem(LineItem lineItem) {
+        public Builder lineItem(JPAShoppingCartItem lineItem) {
             this.lineItems.add(lineItem);
             return this;
         }

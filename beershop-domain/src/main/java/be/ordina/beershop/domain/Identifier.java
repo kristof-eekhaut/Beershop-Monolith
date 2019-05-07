@@ -1,6 +1,5 @@
 package be.ordina.beershop.domain;
 
-public interface Identifier<T> extends ValueObject {
+public interface Identifier extends ValueObject {
 
-    T getValue();
 }

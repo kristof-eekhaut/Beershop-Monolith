@@ -1,5 +1,7 @@
 package be.ordina.beershop.service;
 
+import be.ordina.beershop.repository.JPAProductDAO;
+import be.ordina.beershop.repository.entities.JPAProduct;
 import be.ordina.beershop.repository.entities.Order;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +21,19 @@ public class DeliveryService {
     private RestTemplate restTemplate;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private JPAProductDAO jpaProductDAO;
 
     public String requestShipment(final Order order) {
         final BigDecimal totalWeight = order
                 .getLineItems()
                 .stream()
-                .map(lineItem -> lineItem.getProduct().getWeight().getAmountInGrams()
-                                         .multiply(BigDecimal.valueOf(lineItem.getQuantity())))
+                .map(lineItem -> {
+                    JPAProduct product = jpaProductDAO.findById(lineItem.getProductId())
+                            .orElseThrow(() -> new IllegalStateException("product not found: " + lineItem.getProductId()));
+                    return product.getWeight().getAmountInGrams()
+                            .multiply(BigDecimal.valueOf(lineItem.getQuantity()));
+                })
                 .reduce(ZERO, BigDecimal::add);
         final ShipmentRequestDto shipmentRequest = new ShipmentRequestDto(order.getAddress(), totalWeight);
         final ResponseEntity<ShipmentResponseDto> response = restTemplate.postForEntity(

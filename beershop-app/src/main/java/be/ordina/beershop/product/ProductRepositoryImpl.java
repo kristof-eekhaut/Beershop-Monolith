@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static be.ordina.beershop.common.Price.price;
 import static be.ordina.beershop.product.ProductId.productId;
 
 @Component
@@ -35,16 +36,14 @@ public class ProductRepositoryImpl extends AbstractJPARepository<ProductId, Prod
     }
 
     @Override
-    protected JPAProduct mapToJPAEntity(Product from, JPAProduct to) {
+    protected void mapToJPAEntity(Product from, JPAProduct to) {
         to.setName(from.getName());
         to.setQuantity(from.getQuantity());
-        to.setPrice(from.getPrice());
-        to.setAlcoholPercentage(from.getAlcoholPercentage());
+        to.setPrice(from.getPrice().getValue());
+        to.setAlcoholPercentage(from.getAlcoholPercentage().orElse(null));
         to.setWeight(mapToJPAWeight(from.getWeight()));
 
         updateJPADiscounts(from, to);
-
-        return to;
     }
 
     @Override
@@ -53,13 +52,18 @@ public class ProductRepositoryImpl extends AbstractJPARepository<ProductId, Prod
                 .id(productId(jpaProduct.getId()))
                 .name(jpaProduct.getName())
                 .quantity(jpaProduct.getQuantity())
-                .price(jpaProduct.getPrice())
+                .price(price(jpaProduct.getPrice()))
                 .discounts(jpaProduct.getDiscounts().stream()
                         .map(this::mapToDomain)
                         .collect(Collectors.toList()))
-                .alcoholPercentage(jpaProduct.getAlcoholPercentage())
+                .alcoholPercentage(jpaProduct.getAlcoholPercentage().orElse(null))
                 .weight(mapToDomain(jpaProduct.getWeight()))
                 .build();
+    }
+
+    @Override
+    protected UUID mapToJPAId(ProductId aggregateRootId) {
+        return aggregateRootId.getValue();
     }
 
     private Discount mapToDomain(JPADiscount jpaDiscount) {

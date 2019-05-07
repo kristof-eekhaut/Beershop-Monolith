@@ -9,14 +9,14 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static be.ordina.beershop.domain.AddressTestData.koekoekstraat70;
-import static be.ordina.beershop.order.LineItemTestData.lineItem;
+import static be.ordina.beershop.order.JPAShoppingCartItemTestData.shoppingCartItem;
 
 public class OrderTestData {
 
-    public static Order.Builder unpaidOrder(Customer customer, JPAProduct... products) {
+    public static Order.Builder unpaidOrder(Customer customer, UUID shoppingCartId, JPAProduct... products) {
 
-        List<LineItem> lineItems = Arrays.stream(products)
-                .map(product -> lineItem(product).build())
+        List<JPAShoppingCartItem> lineItems = Arrays.stream(products)
+                .map(product -> shoppingCartItem(shoppingCartId, product).build())
                 .collect(Collectors.toList());
 
         return Order.builder()
@@ -28,9 +28,9 @@ public class OrderTestData {
                 .createdOn(LocalDateTime.now());
     }
 
-    public static Order.Builder paidOrder(Customer customer, JPAProduct... products) {
+    public static Order.Builder paidOrder(Customer customer, UUID shoppingCartId, JPAProduct... products) {
 
-        return unpaidOrder(customer, products)
+        return unpaidOrder(customer, shoppingCartId, products)
                 .state(OrderStatus.PAID);
     }
 }

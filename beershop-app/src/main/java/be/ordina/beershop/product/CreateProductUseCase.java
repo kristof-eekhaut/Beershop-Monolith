@@ -1,5 +1,6 @@
 package be.ordina.beershop.product;
 
+import be.ordina.beershop.common.Price;
 import be.ordina.beershop.product.dto.WeightDTO;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +24,7 @@ class CreateProductUseCase {
                 .id(productRepository.nextId())
                 .name(command.getName())
                 .quantity(command.getQuantity())
-                .price(command.getPrice())
+                .price(Price.price(command.getPrice()))
                 .alcoholPercentage(command.getAlcoholPercentage())
                 .weight(createWeight(command.getWeight()))
                 .build();

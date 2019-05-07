@@ -1,12 +1,12 @@
 package be.ordina.beershop.integrationTests.order;
 
 import be.ordina.beershop.customer.CustomerTestData;
-import be.ordina.beershop.repository.entities.Customer;
-import be.ordina.beershop.repository.entities.Order;
-import be.ordina.beershop.repository.entities.JPAProduct;
 import be.ordina.beershop.integrationTests.IntegrationTest;
 import be.ordina.beershop.order.OrderTestData;
 import be.ordina.beershop.product.JPAProductTestData;
+import be.ordina.beershop.repository.entities.Customer;
+import be.ordina.beershop.repository.entities.JPAProduct;
+import be.ordina.beershop.repository.entities.Order;
 import org.junit.Test;
 
 import java.util.UUID;
@@ -25,7 +25,7 @@ public class GetOrderITest extends IntegrationTest {
 
         JPAProduct karmeliet = persistProduct(JPAProductTestData.karmeliet().build());
         JPAProduct westmalle = persistProduct(JPAProductTestData.westmalle().build());
-        Order order = persistOrder(OrderTestData.unpaidOrder(customer, karmeliet, westmalle).build());
+        Order order = persistOrder(OrderTestData.unpaidOrder(customer, UUID.randomUUID(), karmeliet, westmalle).build());
 
         mockMvc.perform(
                 get("/orders/" + order.getId()))
@@ -40,12 +40,12 @@ public class GetOrderITest extends IntegrationTest {
                 .andExpect(jsonPath("$.shipmentAddress.country").value("Belgium"))
                 .andExpect(jsonPath("$.shipmentId").isEmpty())
 
-                // LineItem Karmeliet
+                // Shopping cart item: Karmeliet
                 .andExpect(jsonPath("$.lineItems[0].productId").value(karmeliet.getId().toString()))
                 .andExpect(jsonPath("$.lineItems[0].quantity").value(10))
                 .andExpect(jsonPath("$.lineItems[0].price").value(12.0))
 
-                // LineItem Westmalle
+                // Shopping cart item: Westmalle
                 .andExpect(jsonPath("$.lineItems[1].productId").value(westmalle.getId().toString()))
                 .andExpect(jsonPath("$.lineItems[1].quantity").value(10))
                 .andExpect(jsonPath("$.lineItems[1].price").value(13.0));

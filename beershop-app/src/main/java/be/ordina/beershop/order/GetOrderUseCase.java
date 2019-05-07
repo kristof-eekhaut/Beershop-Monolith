@@ -1,13 +1,14 @@
 package be.ordina.beershop.order;
 
 import be.ordina.beershop.repository.entities.Address;
-import be.ordina.beershop.repository.entities.LineItem;
+import be.ordina.beershop.repository.entities.JPAShoppingCartItem;
 import be.ordina.beershop.repository.entities.Order;
 import be.ordina.beershop.order.dto.LineItemDTO;
 import be.ordina.beershop.order.dto.ShipmentAddressDTO;
 import be.ordina.beershop.repository.OrderRepository;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -41,11 +42,11 @@ class GetOrderUseCase {
                 .build();
     }
 
-    private LineItemDTO toLineItemDTO(LineItem lineItem) {
+    private LineItemDTO toLineItemDTO(JPAShoppingCartItem lineItem) {
         return LineItemDTO.builder()
-                .productId(lineItem.getProduct().getId().toString())
+                .productId(lineItem.getProductId().toString())
                 .quantity(lineItem.getQuantity())
-                .price(lineItem.getPrice())
+                .price(lineItem.getProductPrice().multiply(new BigDecimal(lineItem.getQuantity())))
                 .build();
     }
 

@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.apache.commons.lang3.builder.EqualsBuilder.reflectionEquals;
@@ -96,8 +97,8 @@ public class JPAProduct {
         this.discounts.addAll(discounts);
     }
 
-    public BigDecimal getAlcoholPercentage() {
-        return alcoholPercentage;
+    public Optional<BigDecimal> getAlcoholPercentage() {
+        return Optional.ofNullable(alcoholPercentage);
     }
 
     public void setAlcoholPercentage(final BigDecimal alcoholPercentage) {

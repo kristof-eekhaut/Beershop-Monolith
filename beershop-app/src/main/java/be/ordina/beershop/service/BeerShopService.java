@@ -3,12 +3,12 @@ package be.ordina.beershop.service;
 import be.ordina.beershop.order.CreateOrderCommand;
 import be.ordina.beershop.order.CustomerNotFoundException;
 import be.ordina.beershop.order.OrderNotFoundException;
+import be.ordina.beershop.product.ProductId;
 import be.ordina.beershop.repository.CustomerRepository;
-import be.ordina.beershop.repository.entities.*;
-import be.ordina.beershop.repository.OrderRepository;
 import be.ordina.beershop.repository.JPAProductDAO;
-import be.ordina.beershop.shoppingcart.AddProductToShoppingCartCommand;
-import be.ordina.beershop.shoppingcart.ChangeQuantityOfProductInShoppingCartCommand;
+import be.ordina.beershop.repository.OrderRepository;
+import be.ordina.beershop.repository.entities.*;
+import be.ordina.beershop.shoppingcart.JPAShoppingCartDAO;
 import be.ordina.beershop.shoppingcart.ProductNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -16,16 +16,11 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Period;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
-import static java.math.RoundingMode.HALF_UP;
-import static java.math.RoundingMode.UNNECESSARY;
-import static java.time.LocalDate.now;
 
 @Service
 @Transactional
@@ -45,12 +40,16 @@ public class BeerShopService {
     private DeliveryService deliveryService;
     @Autowired
     private CustomerRepository customerRepository;
+    @Autowired
+    private JPAShoppingCartDAO jpaShoppingCartDAO;
 
     public Order createOrder(final CreateOrderCommand createOrderCommand) {
         UUID customerId = UUID.fromString(createOrderCommand.getCustomerId());
         final Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException(customerId));
-        final List<LineItem> lineItems = customer.getShoppingCart().getLineItems();
+        final JPAShoppingCart jpaShoppingCart = jpaShoppingCartDAO.findByCustomerId(customerId)
+                .orElse(JPAShoppingCart.builder().id(UUID.randomUUID()).customerId(customerId).build());
+        final List<JPAShoppingCartItem> lineItems = jpaShoppingCart.getItems();
 
         final Order order = new Order();
         order.setId(UUID.randomUUID());
@@ -61,7 +60,7 @@ public class BeerShopService {
         order.setLineItems(lineItems);
         final Order savedOrder = orderRepository.save(order);
 
-        order.getCustomer().getShoppingCart().clear();
+        jpaShoppingCart.setItems(new ArrayList<>());
         return savedOrder;
     }
 
@@ -111,9 +110,12 @@ public class BeerShopService {
     private void updateStock(final Order order) {
         order.getLineItems()
              .forEach(lineItem -> {
-                 final int originalQuantity = lineItem.getProduct().getQuantity();
+                 JPAProduct product = productRepository.findById(lineItem.getProductId())
+                         .orElseThrow(() -> new ProductNotFoundException(ProductId.productId(lineItem.getProductId())));
+
+                 final int originalQuantity = product.getQuantity();
                  final int newQuantity = originalQuantity - lineItem.getQuantity();
-                 lineItem.getProduct().setQuantity(newQuantity);
+                 product.setQuantity(newQuantity);
              });
     }
 
@@ -125,78 +127,10 @@ public class BeerShopService {
     private boolean allLineItemsHaveEnoughStock(final Order order) {
         return order.getLineItems()
                     .stream()
-                    .allMatch(lineItem -> lineItem.getQuantity() <= lineItem.getProduct().getQuantity());
-    }
-
-    public void createItemInShoppingCart(final UUID customerId, final AddProductToShoppingCartCommand addProductToShoppingCartCommand) {
-        final Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new be.ordina.beershop.shoppingcart.CustomerNotFoundException(customerId));
-
-        UUID productId = UUID.fromString(addProductToShoppingCartCommand.getProductId());
-        LineItem lineItem = productRepository.findById(productId)
-                .map(product -> LineItem.builder()
-                        .id(UUID.randomUUID())
-                        .product(product)
-                        .quantity(addProductToShoppingCartCommand.getQuantity())
-                        .build())
-                .orElseThrow(() -> new ProductNotFoundException(productId));
-
-        updateLineItemQuantityAndCalculatePrice(lineItem, lineItem.getQuantity());
-
-        if (customerIsOldEnoughForProduct(lineItem, customer)) {
-            throw new RuntimeException("No underage drinking allowed");
-        }
-        final ShoppingCart shoppingCart = customer.getShoppingCart();
-        shoppingCart.addLineItem(lineItem);
-        customerRepository.save(customer);
-    }
-
-    private boolean customerIsOldEnoughForProduct(final LineItem lineItem, final Customer customer) {
-        final boolean alcoholPercentageAboveThreshold = lineItem.getProduct().getAlcoholPercentage().compareTo( LEGAL_DRINKING_ALCOHOL_LIMIT) == 1;
-        final boolean customerIsUnderaged = Period.between(customer.getBirthDate(), LocalDate.now()).getYears() < LEGAL_DRINKING_AGE;
-        return alcoholPercentageAboveThreshold && customerIsUnderaged;
-    }
-
-    private void updateLineItemQuantityAndCalculatePrice(LineItem lineItem, int quantity) {
-        if (quantity == 0) {
-            throw new RuntimeException("Quantity should not be 0");
-        }
-        lineItem.setQuantity(quantity);
-        final BigDecimal price = calculateProductPrice(lineItem.getProduct());
-        final BigDecimal linePriceTotal = price.multiply(BigDecimal.valueOf(lineItem.getQuantity()));
-        lineItem.setPrice(linePriceTotal);
-    }
-
-    private BigDecimal calculateProductPrice(final JPAProduct product) {
-        final JPADiscount activeDiscount = product
-                .getDiscounts()
-                .stream()
-                .filter(discount -> discount.getStartDate().isBefore(now()) && discount.getEndDate().isAfter(now()))
-                .findFirst()
-                .orElse(JPADiscount.NONE);
-        final BigDecimal discountPercentage = activeDiscount.getPercentage().divide(BigDecimal.valueOf(100),
-                UNNECESSARY);
-        final BigDecimal discountAmount = product.getPrice().multiply(discountPercentage);
-        return product.getPrice().subtract(discountAmount).setScale(2, HALF_UP);
-    }
-
-    public void updateQuantityOfItemInShoppingCart(final UUID customerId, final ChangeQuantityOfProductInShoppingCartCommand command) {
-        final Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new be.ordina.beershop.shoppingcart.CustomerNotFoundException(customerId));
-
-        UUID productId = UUID.fromString(command.getProductId());
-        customer.getShoppingCart().getLineItems().stream()
-                .filter(lineItem -> lineItem.getProduct().getId().equals(productId))
-                .findFirst()
-                .ifPresent(lineItem -> updateLineItemQuantityAndCalculatePrice(lineItem, command.getQuantity()));
-
-        customerRepository.save(customer);
-    }
-
-    public void deleteLineInShoppingCart(final UUID customerId, final UUID productId) {
-        final Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new be.ordina.beershop.shoppingcart.CustomerNotFoundException(customerId));
-        customer.getShoppingCart().deleteLine(productId);
-        customerRepository.save(customer);
+                    .allMatch(lineItem -> {
+                        JPAProduct product = productRepository.findById(lineItem.getProductId())
+                                .orElseThrow(() -> new ProductNotFoundException(ProductId.productId(lineItem.getProductId())));
+                        return lineItem.getQuantity() <= product.getQuantity();
+                    });
     }
 }

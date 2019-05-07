@@ -9,8 +9,6 @@ import static java.util.Objects.requireNonNull;
 
 public class Discount extends AbstractValueObject {
 
-    public static final Discount NONE = Discount.builder().percentage(BigDecimal.ZERO).startDate(LocalDate.now()).endDate(LocalDate.now()).build();
-
     private final BigDecimal percentage;
     private final LocalDate startDate;
     private final LocalDate endDate;

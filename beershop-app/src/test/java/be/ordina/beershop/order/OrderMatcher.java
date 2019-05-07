@@ -1,7 +1,7 @@
 package be.ordina.beershop.order;
 
 import be.ordina.beershop.domain.matcher.BaseEntityMatcher;
-import be.ordina.beershop.repository.entities.LineItem;
+import be.ordina.beershop.repository.entities.JPAShoppingCartItem;
 import be.ordina.beershop.repository.entities.Order;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -14,7 +14,7 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 
 public class OrderMatcher extends BaseEntityMatcher<Order> {
 
-    private final Matcher<? super List<LineItem>> lineItems;
+    private final Matcher<? super List<JPAShoppingCartItem>> lineItems;
 
     public static OrderMatcher matchesOrder(Order order) {
         return new OrderMatcher(order);
@@ -25,9 +25,9 @@ public class OrderMatcher extends BaseEntityMatcher<Order> {
         this.lineItems = matchingLineItems(order);
     }
 
-    private Matcher<? super List<LineItem>> matchingLineItems(Order order) {
-        List<Matcher<? super LineItem>> discountsMatchers = order.getLineItems().stream()
-                .map(LineItemMatcher::matchesLineItem)
+    private Matcher<? super List<JPAShoppingCartItem>> matchingLineItems(Order order) {
+        List<Matcher<? super JPAShoppingCartItem>> discountsMatchers = order.getLineItems().stream()
+                .map(JPAShoppingCartItemMatcher::matchesLineItem)
                 .collect(Collectors.toList());
         return containsInAnyOrder(discountsMatchers);
     }

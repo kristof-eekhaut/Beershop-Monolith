@@ -1,10 +1,11 @@
 package be.ordina.beershop.product;
 
-import be.ordina.beershop.domain.AbstractIdentifier;
+import be.ordina.beershop.domain.Identifier;
+import be.ordina.beershop.domain.SingleValueObject;
 
 import java.util.UUID;
 
-public class ProductId extends AbstractIdentifier<UUID> {
+public class ProductId extends SingleValueObject<UUID> implements Identifier {
 
     private ProductId(UUID value) {
         super(value);

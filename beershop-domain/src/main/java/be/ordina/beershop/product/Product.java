@@ -1,5 +1,6 @@
 package be.ordina.beershop.product;
 
+import be.ordina.beershop.common.Price;
 import be.ordina.beershop.domain.AbstractAggregateRoot;
 import be.ordina.beershop.product.event.ProductCreatedEvent;
 import be.ordina.beershop.product.event.ProductStockChangedEvent;
@@ -17,7 +18,7 @@ public class Product extends AbstractAggregateRoot<ProductId> {
 
     private String name;
     private int quantity;
-    private BigDecimal price;
+    private Price price;
     private BigDecimal alcoholPercentage;
     private Weight weight;
 
@@ -51,12 +52,12 @@ public class Product extends AbstractAggregateRoot<ProductId> {
         return quantity;
     }
 
-    public BigDecimal getPrice() {
+    public Price getPrice() {
         return price;
     }
 
-    public Optional<Weight> getWeight() {
-        return Optional.ofNullable(weight);
+    public Weight getWeight() {
+        return weight;
     }
 
     public List<Discount> getDiscounts() {
@@ -65,6 +66,19 @@ public class Product extends AbstractAggregateRoot<ProductId> {
 
     public Optional<BigDecimal> getAlcoholPercentage() {
         return Optional.ofNullable(alcoholPercentage);
+    }
+
+    public Price calculateDiscountedPrice() {
+        return getActiveDiscount()
+                .map(discount -> price.applyDiscountPercentage(discount.getPercentage()))
+                .orElse(price);
+    }
+
+    public Optional<Discount> getActiveDiscount() {
+        LocalDate today = LocalDate.now();
+        return discounts.stream()
+                .filter(discount -> !discount.getStartDate().isAfter(today) && !discount.getEndDate().isBefore(today))
+                .findAny();
     }
 
     public QuantityIndicator getQuantityIndicator() {
@@ -104,12 +118,12 @@ public class Product extends AbstractAggregateRoot<ProductId> {
         this.quantity = quantity;
     }
 
-    private void setPrice(BigDecimal price) {
+    private void setPrice(Price price) {
         this.price = requireNonNull(price);
     }
 
     private void setWeight(final Weight weight) {
-        this.weight = weight;
+        this.weight = requireNonNull(weight);
     }
 
     private void setAlcoholPercentage(final BigDecimal alcoholPercentage) {
@@ -124,7 +138,7 @@ public class Product extends AbstractAggregateRoot<ProductId> {
         private ProductId id;
         private String name;
         private int quantity;
-        private BigDecimal price;
+        private Price price;
         private List<Discount> discounts = new ArrayList<>();
         private BigDecimal alcoholPercentage;
         private Weight weight;
@@ -147,7 +161,7 @@ public class Product extends AbstractAggregateRoot<ProductId> {
             return this;
         }
 
-        public Builder price(BigDecimal price) {
+        public Builder price(Price price) {
             this.price = price;
             return this;
         }

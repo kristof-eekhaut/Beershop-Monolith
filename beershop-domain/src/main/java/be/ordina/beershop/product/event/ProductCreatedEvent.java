@@ -1,5 +1,6 @@
 package be.ordina.beershop.product.event;
 
+import be.ordina.beershop.common.Price;
 import be.ordina.beershop.domain.AbstractDomainEvent;
 import be.ordina.beershop.product.ProductId;
 import be.ordina.beershop.product.Weight;
@@ -11,7 +12,7 @@ public class ProductCreatedEvent extends AbstractDomainEvent {
     private ProductId productId;
     private String name;
     private int quantity;
-    private BigDecimal price;
+    private Price price;
     private BigDecimal alcoholPercentage;
     private Weight weight;
 
@@ -36,7 +37,7 @@ public class ProductCreatedEvent extends AbstractDomainEvent {
         return quantity;
     }
 
-    public BigDecimal getPrice() {
+    public Price getPrice() {
         return price;
     }
 
@@ -56,7 +57,7 @@ public class ProductCreatedEvent extends AbstractDomainEvent {
         private ProductId productId;
         private String name;
         private int quantity;
-        private BigDecimal price;
+        private Price price;
         private BigDecimal alcoholPercentage;
         private Weight weight;
 
@@ -78,7 +79,7 @@ public class ProductCreatedEvent extends AbstractDomainEvent {
             return this;
         }
 
-        public Builder price(BigDecimal price) {
+        public Builder price(Price price) {
             this.price = price;
             return this;
         }

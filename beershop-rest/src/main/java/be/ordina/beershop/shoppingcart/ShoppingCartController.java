@@ -17,6 +17,13 @@ class ShoppingCartController {
         this.shoppingCartFacade = requireNonNull(shoppingCartFacade);
     }
 
+    @GetMapping()
+    public ResponseEntity<ShoppingCartView> getShoppingCart(@PathVariable String customerId) {
+        return shoppingCartFacade.getShoppingCart(customerId)
+                .map(shoppingCart -> ResponseEntity.ok().body(shoppingCart))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @PatchMapping("/add-product")
     public ResponseEntity<?> addProductToShoppingCart(@PathVariable String customerId, @RequestBody @Valid AddProductToShoppingCart addProductToShoppingCart) {
         AddProductToShoppingCartCommand command = new AddProductToShoppingCartCommand(

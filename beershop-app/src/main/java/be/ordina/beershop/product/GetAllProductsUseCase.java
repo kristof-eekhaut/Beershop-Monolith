@@ -25,14 +25,14 @@ class GetAllProductsUseCase {
         return ProductView.builder()
                 .id(product.getId().toString())
                 .name(product.getName())
-                .alcoholPercentage(product.getAlcoholPercentage())
-                .weight(toWeightDTO(product.getWeight()))
+                .alcoholPercentage(product.getAlcoholPercentage().orElse(null))
+                .weight(mapToWeightDTO(product.getWeight()))
                 .quantity(product.getQuantity())
-                .price(product.getPrice())
+                .price(product.getPrice().getValue())
                 .build();
     }
 
-    private WeightDTO toWeightDTO(Weight weight) {
+    private WeightDTO mapToWeightDTO(Weight weight) {
         return new WeightDTO(weight.getAmount(), weight.getUnit().name());
     }
 }

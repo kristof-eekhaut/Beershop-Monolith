@@ -6,7 +6,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import static java.util.Objects.requireNonNull;
 import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 
-public abstract class AbstractEntity<ID extends Identifier<?>> implements Entity<ID> {
+public abstract class AbstractEntity<ID extends Identifier> implements Entity<ID> {
 
     private final ID id;
 

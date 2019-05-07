@@ -1,25 +1,21 @@
 package be.ordina.beershop.integrationTests.shoppingcart;
 
 import be.ordina.beershop.customer.CustomerTestData;
-import be.ordina.beershop.repository.entities.Customer;
-import be.ordina.beershop.repository.entities.LineItem;
-import be.ordina.beershop.repository.entities.JPAProduct;
-import be.ordina.beershop.repository.entities.ShoppingCart;
 import be.ordina.beershop.integrationTests.IntegrationTest;
-import be.ordina.beershop.order.LineItemMatcher;
-import be.ordina.beershop.order.LineItemTestData;
 import be.ordina.beershop.product.JPAProductTestData;
-import be.ordina.beershop.shoppingcart.ShoppingCartTestData;
+import be.ordina.beershop.repository.entities.Customer;
+import be.ordina.beershop.repository.entities.JPAProduct;
+import be.ordina.beershop.repository.entities.JPAShoppingCart;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 
 import java.util.UUID;
 
+import static be.ordina.beershop.shoppingcart.JPAShoppingCartTestData.cartWithItems;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class RemoveItemFromShoppingCartITest extends IntegrationTest {
@@ -28,13 +24,8 @@ public class RemoveItemFromShoppingCartITest extends IntegrationTest {
     public void givenCustomerWithItemInShoppingCart_whenRemovingItem_thenShoppingCartIsEmpty() throws Exception {
 
         JPAProduct karmeliet = persistProduct(JPAProductTestData.karmeliet().build());
-
-        LineItem lineItem = LineItemTestData.lineItem(karmeliet).build();
-        Customer customer = persistCustomer(CustomerTestData.manVanMelle()
-                .shoppingCart(ShoppingCartTestData.emptyCart()
-                        .lineItem(lineItem)
-                        .build())
-                .build());
+        Customer customer = persistCustomer(CustomerTestData.manVanMelle().build());
+        JPAShoppingCart shoppingCart = persistShoppingCart(cartWithItems(customer.getId(), karmeliet).build());
 
         mockMvc.perform(
                 patch("/customers/" + customer.getId() + "/shopping-cart/remove-product/" + karmeliet.getId())
@@ -42,12 +33,15 @@ public class RemoveItemFromShoppingCartITest extends IntegrationTest {
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        runInTransaction(() -> {
-            Customer updateCustomer = customerRepository.findById(customer.getId()).get();
-            ShoppingCart shoppingCart = updateCustomer.getShoppingCart();
+        mockMvc.perform(
+                get("/customers/" + customer.getId() + "/shopping-cart"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(shoppingCart.getId().toString()))
+                .andExpect(jsonPath("$.customerId").value(customer.getId().toString()))
+                .andExpect(jsonPath("$.totalPrice").value(0.00))
 
-            assertThat(shoppingCart.getLineItems(), hasSize(0));
-        });
+                .andExpect(jsonPath("$.items").value(hasSize(0)));
     }
 
     @Test
@@ -55,14 +49,8 @@ public class RemoveItemFromShoppingCartITest extends IntegrationTest {
 
         JPAProduct karmeliet = persistProduct(JPAProductTestData.karmeliet().build());
         JPAProduct westmalle = persistProduct(JPAProductTestData.westmalle().build());
-
-        LineItem lineItem = LineItemTestData.lineItem(karmeliet).build();
-        Customer customer = persistCustomer(CustomerTestData.manVanMelle()
-                .shoppingCart(ShoppingCartTestData.emptyCart()
-                        .lineItem(lineItem)
-                        .lineItem(LineItemTestData.lineItem(westmalle).build())
-                        .build())
-                .build());
+        Customer customer = persistCustomer(CustomerTestData.manVanMelle().build());
+        JPAShoppingCart shoppingCart = persistShoppingCart(cartWithItems(customer.getId(), karmeliet, westmalle).build());
 
         mockMvc.perform(
                 patch("/customers/" + customer.getId() + "/shopping-cart/remove-product/" + karmeliet.getId())
@@ -70,28 +58,29 @@ public class RemoveItemFromShoppingCartITest extends IntegrationTest {
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        runInTransaction(() -> {
-            Customer updateCustomer = customerRepository.findById(customer.getId()).get();
-            ShoppingCart shoppingCart = updateCustomer.getShoppingCart();
+        mockMvc.perform(
+                get("/customers/" + customer.getId() + "/shopping-cart"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(shoppingCart.getId().toString()))
+                .andExpect(jsonPath("$.customerId").value(customer.getId().toString()))
+                .andExpect(jsonPath("$.totalPrice").value(13.00))
 
-            assertThat(shoppingCart.getLineItems(), hasSize(1));
-            assertThat(shoppingCart.getLineItems().get(0),
-                    LineItemMatcher.matchesLineItem(LineItemTestData.lineItem(westmalle).build())
-            );
-        });
+                .andExpect(jsonPath("$.items").value(hasSize(1)))
+
+                // Shopping cart item: Westmalle
+                .andExpect(jsonPath("$.items[0].productId").value(westmalle.getId().toString()))
+                .andExpect(jsonPath("$.items[0].quantity").value(10))
+                .andExpect(jsonPath("$.items[0].productPrice").value(1.30))
+                .andExpect(jsonPath("$.items[0].totalPrice").value(13.00));
     }
 
     @Test
     public void givenCustomerWithItemInShoppingCart_whenRemovingNonExistingItem_thenShoppingCartIsUnchanged() throws Exception {
 
         JPAProduct karmeliet = persistProduct(JPAProductTestData.karmeliet().build());
-
-        LineItem lineItem = LineItemTestData.lineItem(karmeliet).build();
-        Customer customer = persistCustomer(CustomerTestData.manVanMelle()
-                .shoppingCart(ShoppingCartTestData.emptyCart()
-                        .lineItem(lineItem)
-                        .build())
-                .build());
+        Customer customer = persistCustomer(CustomerTestData.manVanMelle().build());
+        JPAShoppingCart shoppingCart = persistShoppingCart(cartWithItems(customer.getId(), karmeliet).build());
 
         mockMvc.perform(
                 patch("/customers/" + customer.getId() + "/shopping-cart/remove-product/" + UUID.randomUUID())
@@ -99,15 +88,21 @@ public class RemoveItemFromShoppingCartITest extends IntegrationTest {
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        runInTransaction(() -> {
-            Customer updateCustomer = customerRepository.findById(customer.getId()).get();
-            ShoppingCart shoppingCart = updateCustomer.getShoppingCart();
+        mockMvc.perform(
+                get("/customers/" + customer.getId() + "/shopping-cart"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(shoppingCart.getId().toString()))
+                .andExpect(jsonPath("$.customerId").value(customer.getId().toString()))
+                .andExpect(jsonPath("$.totalPrice").value(12.00))
 
-            assertThat(shoppingCart.getLineItems(), hasSize(1));
-            assertThat(shoppingCart.getLineItems().get(0),
-                    LineItemMatcher.matchesLineItem(lineItem)
-            );
-        });
+                .andExpect(jsonPath("$.items").value(hasSize(1)))
+
+                // Shopping cart item: Westmalle
+                .andExpect(jsonPath("$.items[0].productId").value(karmeliet.getId().toString()))
+                .andExpect(jsonPath("$.items[0].quantity").value(10))
+                .andExpect(jsonPath("$.items[0].productPrice").value(1.20))
+                .andExpect(jsonPath("$.items[0].totalPrice").value(12.00));
     }
 
     @Test
