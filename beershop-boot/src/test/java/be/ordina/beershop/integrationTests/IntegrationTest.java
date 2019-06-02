@@ -1,5 +1,6 @@
 package be.ordina.beershop.integrationTests;
 
+import be.ordina.beershop.BeershopApplication;
 import be.ordina.beershop.repository.CustomerRepository;
 import be.ordina.beershop.repository.JPAProductDAO;
 import be.ordina.beershop.repository.OrderRepository;
@@ -19,7 +20,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.support.TransactionTemplate;
 
-@SpringBootTest
+@SpringBootTest(classes = BeershopApplication.class)
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 @SqlGroup({

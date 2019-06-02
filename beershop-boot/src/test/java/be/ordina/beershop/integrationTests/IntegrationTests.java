@@ -1,5 +1,6 @@
 package be.ordina.beershop.integrationTests;
 
+import be.ordina.beershop.BeershopApplication;
 import be.ordina.beershop.order.CreateOrder;
 import be.ordina.beershop.product.CreateProduct;
 import be.ordina.beershop.repository.CustomerRepository;
@@ -38,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@SpringBootTest(classes = BeershopApplication.class)
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 class IntegrationTests {
