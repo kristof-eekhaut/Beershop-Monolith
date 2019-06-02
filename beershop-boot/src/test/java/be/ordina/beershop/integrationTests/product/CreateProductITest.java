@@ -5,7 +5,7 @@ import be.ordina.beershop.product.CreateProduct;
 import be.ordina.beershop.product.JPAProductMatcher;
 import be.ordina.beershop.product.WeightUnit;
 import be.ordina.beershop.repository.entities.JPAProduct;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
 import java.math.BigDecimal;
@@ -18,10 +18,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class CreateProductITest extends IntegrationTest {
+class CreateProductITest extends IntegrationTest {
 
     @Test
-    public void whenCreatingNewProduct_thenProductIsPersisted() throws Exception {
+    void whenCreatingNewProduct_thenProductIsPersisted() throws Exception {
 
         final CreateProduct createProduct = defaultCreateProductDTO().build();
 
@@ -48,7 +48,7 @@ public class CreateProductITest extends IntegrationTest {
     }
 
     @Test
-    public void whenCreatingProductWithoutName_thenProductIsNotCreated() throws Exception {
+    void whenCreatingProductWithoutName_thenProductIsNotCreated() throws Exception {
 
         final CreateProduct createProduct = defaultCreateProductDTO().name(null).build();
 
@@ -66,7 +66,7 @@ public class CreateProductITest extends IntegrationTest {
     }
 
     @Test
-    public void whenCreatingProductWithoutPrice_thenProductIsNotCreated() throws Exception {
+    void whenCreatingProductWithoutPrice_thenProductIsNotCreated() throws Exception {
 
         final CreateProduct createProduct = defaultCreateProductDTO().price(null).build();
 
@@ -84,7 +84,7 @@ public class CreateProductITest extends IntegrationTest {
     }
 
     @Test
-    public void whenCreatingProductWithPrice0_thenProductIsNotCreated() throws Exception {
+    void whenCreatingProductWithPrice0_thenProductIsNotCreated() throws Exception {
 
         final CreateProduct createProduct = defaultCreateProductDTO().price(new BigDecimal("0")).build();
 
@@ -102,7 +102,7 @@ public class CreateProductITest extends IntegrationTest {
     }
 
     @Test
-    public void whenCreatingProductWithoutAlcoholPercentage_thenProductIsNotCreated() throws Exception {
+    void whenCreatingProductWithoutAlcoholPercentage_thenProductIsNotCreated() throws Exception {
 
         final CreateProduct createProduct = defaultCreateProductDTO().alcoholPercentage(null).build();
 
@@ -120,7 +120,7 @@ public class CreateProductITest extends IntegrationTest {
     }
 
     @Test
-    public void whenCreatingProductWithoutWeightAmount_thenProductIsNotCreated() throws Exception {
+    void whenCreatingProductWithoutWeightAmount_thenProductIsNotCreated() throws Exception {
 
         final CreateProduct createProduct = defaultCreateProductDTO().weight(null, "GRAM").build();
 
@@ -138,7 +138,7 @@ public class CreateProductITest extends IntegrationTest {
     }
 
     @Test
-    public void whenCreatingProductWithoutWeightUnit_thenProductIsNotCreated() throws Exception {
+    void whenCreatingProductWithoutWeightUnit_thenProductIsNotCreated() throws Exception {
 
         final CreateProduct createProduct = defaultCreateProductDTO().weight(new BigDecimal("100"), null).build();
 

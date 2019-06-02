@@ -9,7 +9,7 @@ import be.ordina.beershop.repository.entities.JPAShoppingCart;
 import be.ordina.beershop.shoppingcart.AddProductToShoppingCart;
 import be.ordina.beershop.shoppingcart.JPAShoppingCartTestData;
 import be.ordina.beershop.shoppingcart.exception.ShoppingCartErrorCode;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
 import java.util.UUID;
@@ -22,10 +22,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class AddProductToShoppingCartITest extends IntegrationTest {
+class AddProductToShoppingCartITest extends IntegrationTest {
 
     @Test
-    public void givenCustomerWithEmptyShoppingCart_whenAddingItemToShoppingCart_thenShoppingCartContainsItem() throws Exception {
+    void givenCustomerWithEmptyShoppingCart_whenAddingItemToShoppingCart_thenShoppingCartContainsItem() throws Exception {
 
         JPAProduct karmeliet = persistProduct(JPAProductTestData.karmeliet().build());
         Customer customer = persistCustomer(CustomerTestData.manVanMelle().build());
@@ -57,7 +57,7 @@ public class AddProductToShoppingCartITest extends IntegrationTest {
     }
 
     @Test
-    public void givenCustomerWithItemInShoppingCart_whenAddingOtherItemToShoppingCart_thenShoppingCartContains2Items() throws Exception {
+    void givenCustomerWithItemInShoppingCart_whenAddingOtherItemToShoppingCart_thenShoppingCartContains2Items() throws Exception {
 
         JPAProduct karmeliet = persistProduct(JPAProductTestData.karmeliet().build());
         JPAProduct westmalle = persistProduct(JPAProductTestData.westmalle().build());
@@ -97,7 +97,7 @@ public class AddProductToShoppingCartITest extends IntegrationTest {
     }
 
     @Test
-    public void givenCustomerWithItemInShoppingCart_whenAddingMoreOfTheSameItemToShoppingCart_thenShoppingCartQuantityIsIncreased() throws Exception {
+    void givenCustomerWithItemInShoppingCart_whenAddingMoreOfTheSameItemToShoppingCart_thenShoppingCartQuantityIsIncreased() throws Exception {
 
         JPAProduct karmeliet = persistProduct(JPAProductTestData.karmeliet().build());
         Customer customer = persistCustomer(CustomerTestData.manVanMelle().build());
@@ -130,7 +130,7 @@ public class AddProductToShoppingCartITest extends IntegrationTest {
     }
 
     @Test
-    public void givenCustomerWithEmptyShoppingCart_whenAddingItemWithQuantity0ToShoppingCart_thenShoppingCartIsNotUpdated() throws Exception {
+    void givenCustomerWithEmptyShoppingCart_whenAddingItemWithQuantity0ToShoppingCart_thenShoppingCartIsNotUpdated() throws Exception {
 
         JPAProduct karmeliet = persistProduct(JPAProductTestData.karmeliet().build());
         Customer customer = persistCustomer(CustomerTestData.manVanMelle().build());
@@ -157,7 +157,7 @@ public class AddProductToShoppingCartITest extends IntegrationTest {
     }
 
     @Test
-    public void givenNoCustomer_whenAddingItemToShoppingCart_thenNotFound() throws Exception {
+    void givenNoCustomer_whenAddingItemToShoppingCart_thenNotFound() throws Exception {
 
         JPAProduct karmeliet = persistProduct(JPAProductTestData.karmeliet().build());
 
@@ -172,7 +172,7 @@ public class AddProductToShoppingCartITest extends IntegrationTest {
     }
 
     @Test
-    public void givenCustomerWithEmptyShoppingCart_whenAddingNonExistingItemToShoppingCart_thenShoppingCartIsNotUpdated() throws Exception {
+    void givenCustomerWithEmptyShoppingCart_whenAddingNonExistingItemToShoppingCart_thenShoppingCartIsNotUpdated() throws Exception {
 
         Customer customer = persistCustomer(CustomerTestData.manVanMelle().build());
 

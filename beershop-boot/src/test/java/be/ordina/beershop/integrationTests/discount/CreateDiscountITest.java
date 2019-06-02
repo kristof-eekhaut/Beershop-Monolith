@@ -2,12 +2,12 @@ package be.ordina.beershop.integrationTests.discount;
 
 import be.ordina.beershop.discount.CreateDiscount;
 import be.ordina.beershop.discount.JPADiscountMatcher;
-import be.ordina.beershop.repository.entities.JPADiscount;
-import be.ordina.beershop.repository.entities.JPAProduct;
 import be.ordina.beershop.integrationTests.IntegrationTest;
 import be.ordina.beershop.product.JPAProductTestData;
+import be.ordina.beershop.repository.entities.JPADiscount;
+import be.ordina.beershop.repository.entities.JPAProduct;
 import org.hamcrest.MatcherAssert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
 import java.math.BigDecimal;
@@ -20,10 +20,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class CreateDiscountITest extends IntegrationTest {
+class CreateDiscountITest extends IntegrationTest {
 
     @Test
-    public void givenProduct_whenCreatingDiscount_thenDiscountIsAddedToProduct() throws Exception {
+    void givenProduct_whenCreatingDiscount_thenDiscountIsAddedToProduct() throws Exception {
 
         JPAProduct karmeliet = persistProduct(JPAProductTestData.karmeliet().build());
 
@@ -56,7 +56,7 @@ public class CreateDiscountITest extends IntegrationTest {
     }
 
     @Test
-    public void givenNoProduct_whenCreatingDiscount_thenNotFound() throws Exception {
+    void givenNoProduct_whenCreatingDiscount_thenNotFound() throws Exception {
 
         final CreateDiscount createDiscount = CreateDiscount.builder()
                 .productId(UUID.randomUUID().toString())

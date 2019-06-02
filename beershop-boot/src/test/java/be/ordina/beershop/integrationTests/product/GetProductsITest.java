@@ -2,7 +2,7 @@ package be.ordina.beershop.integrationTests.product;
 
 import be.ordina.beershop.integrationTests.IntegrationTest;
 import be.ordina.beershop.product.JPAProductTestData;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
@@ -11,10 +11,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class GetProductsITest extends IntegrationTest {
+class GetProductsITest extends IntegrationTest {
 
     @Test
-    public void whenNoProductsExist_thenEmptyPage() throws Exception {
+    void whenNoProductsExist_thenEmptyPage() throws Exception {
 
         mockMvc.perform(
                 get("/products"))
@@ -24,7 +24,7 @@ public class GetProductsITest extends IntegrationTest {
     }
 
     @Test
-    public void whenOneProductExists_thenPageWith1Item() throws Exception {
+    void whenOneProductExists_thenPageWith1Item() throws Exception {
 
         persistProduct(JPAProductTestData.karmeliet().build());
 
@@ -42,7 +42,7 @@ public class GetProductsITest extends IntegrationTest {
     }
 
     @Test
-    public void whenMultipleProductsExist_thenPageWithMultipleItems() throws Exception {
+    void whenMultipleProductsExist_thenPageWithMultipleItems() throws Exception {
 
         persistProduct(JPAProductTestData.karmeliet().build());
         persistProduct(JPAProductTestData.westmalle().build());

@@ -7,17 +7,17 @@ import be.ordina.beershop.order.OrderTestData;
 import be.ordina.beershop.product.JPAProductTestData;
 import be.ordina.beershop.repository.entities.*;
 import org.hamcrest.MatcherAssert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static be.ordina.beershop.shoppingcart.JPAShoppingCartTestData.cartWithItems;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class PayOrderITest extends IntegrationTest {
+class PayOrderITest extends IntegrationTest {
 
     @Test
-    public void givenOrder_whenPayingOrder_thenOrderIsPaid() throws Exception {
+    void givenOrder_whenPayingOrder_thenOrderIsPaid() throws Exception {
 
         JPAProduct karmeliet = persistProduct(JPAProductTestData.karmeliet().build());
 

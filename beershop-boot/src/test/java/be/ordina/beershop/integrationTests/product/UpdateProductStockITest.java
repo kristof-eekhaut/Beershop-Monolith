@@ -1,14 +1,14 @@
 package be.ordina.beershop.integrationTests.product;
 
-import be.ordina.beershop.repository.entities.JPAProduct;
-import be.ordina.beershop.product.WeightUnit;
 import be.ordina.beershop.integrationTests.IntegrationTest;
-import be.ordina.beershop.product.exception.ProductErrorCode;
 import be.ordina.beershop.product.JPAProductMatcher;
 import be.ordina.beershop.product.JPAProductTestData;
 import be.ordina.beershop.product.UpdateProductStock;
+import be.ordina.beershop.product.WeightUnit;
+import be.ordina.beershop.product.exception.ProductErrorCode;
+import be.ordina.beershop.repository.entities.JPAProduct;
 import org.hamcrest.MatcherAssert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
 import java.math.BigDecimal;
@@ -19,10 +19,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class UpdateProductStockITest extends IntegrationTest {
+class UpdateProductStockITest extends IntegrationTest {
 
     @Test
-    public void givenProduct_whenUpdatingProductQuantity_thenProductIsUpdated() throws Exception {
+    void givenProduct_whenUpdatingProductQuantity_thenProductIsUpdated() throws Exception {
 
         JPAProduct karmeliet = persistProduct(JPAProductTestData.karmeliet().build());
 
@@ -48,7 +48,7 @@ public class UpdateProductStockITest extends IntegrationTest {
     }
 
     @Test
-    public void givenProduct_whenUpdatingProductQuantityToLessThan0_thenProductIsNotUpdated() throws Exception {
+    void givenProduct_whenUpdatingProductQuantityToLessThan0_thenProductIsNotUpdated() throws Exception {
 
         JPAProduct karmeliet = persistProduct(JPAProductTestData.karmeliet().build());
 

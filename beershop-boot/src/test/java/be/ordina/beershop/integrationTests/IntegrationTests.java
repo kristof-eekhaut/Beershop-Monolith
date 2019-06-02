@@ -3,22 +3,22 @@ package be.ordina.beershop.integrationTests;
 import be.ordina.beershop.order.CreateOrder;
 import be.ordina.beershop.product.CreateProduct;
 import be.ordina.beershop.repository.CustomerRepository;
-import be.ordina.beershop.repository.OrderRepository;
 import be.ordina.beershop.repository.JPAProductDAO;
+import be.ordina.beershop.repository.OrderRepository;
 import be.ordina.beershop.repository.entities.Address;
 import be.ordina.beershop.repository.entities.Customer;
 import be.ordina.beershop.repository.entities.Order;
 import be.ordina.beershop.repository.entities.OrderStatus;
 import be.ordina.beershop.shoppingcart.AddProductToShoppingCart;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.TransactionStatus;
@@ -39,9 +39,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
-public class IntegrationTests {
+class IntegrationTests {
 
     @Autowired
     private WebApplicationContext wac;
@@ -61,8 +61,8 @@ public class IntegrationTests {
     private UUID customerId;
     private Address address;
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
                                  .build();
         transactionTemplate.execute(new TransactionCallbackWithoutResult() {
@@ -75,7 +75,7 @@ public class IntegrationTests {
 
     @Test
     @Transactional
-    public void test() throws Exception {
+    void test() throws Exception {
         final Customer customer = new Customer();
         customer.setId(customerId);
 

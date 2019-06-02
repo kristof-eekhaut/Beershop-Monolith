@@ -9,7 +9,7 @@ import be.ordina.beershop.product.JPAProductTestData;
 import be.ordina.beershop.repository.entities.*;
 import be.ordina.beershop.shoppingcart.JPAShoppingCartTestData;
 import org.hamcrest.MatcherAssert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
 import java.util.List;
@@ -22,10 +22,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class CreateOrderITest extends IntegrationTest {
+class CreateOrderITest extends IntegrationTest {
 
     @Test
-    public void givenCustomerWithShoppingCart_whenCreatingNewOrder_thenOrderIsCreatedAndShoppingCartIsCleared() throws Exception {
+    void givenCustomerWithShoppingCart_whenCreatingNewOrder_thenOrderIsCreatedAndShoppingCartIsCleared() throws Exception {
 
         JPAProduct karmeliet = persistProduct(JPAProductTestData.karmeliet().build());
         JPAProduct westmalle = persistProduct(JPAProductTestData.westmalle().build());
@@ -76,7 +76,7 @@ public class CreateOrderITest extends IntegrationTest {
     }
 
     @Test
-    public void givenNoCustomer_whenCreatingNewOrder_thenOrderIsNotCreated() throws Exception {
+    void givenNoCustomer_whenCreatingNewOrder_thenOrderIsNotCreated() throws Exception {
 
         final CreateOrder createOrders = new CreateOrder(UUID.randomUUID().toString());
 

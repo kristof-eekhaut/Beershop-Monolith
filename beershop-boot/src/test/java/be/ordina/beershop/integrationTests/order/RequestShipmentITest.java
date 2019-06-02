@@ -8,8 +8,8 @@ import be.ordina.beershop.product.JPAProductTestData;
 import be.ordina.beershop.repository.entities.*;
 import be.ordina.beershop.service.ShipmentResponseDto;
 import org.hamcrest.MatcherAssert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
@@ -22,15 +22,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class RequestShipmentITest extends IntegrationTest {
+class RequestShipmentITest extends IntegrationTest {
 
     @Autowired
     private RestTemplate restTemplate;
 
     private MockRestServiceServer mockServer;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         if (mockServer == null) {
             this.mockServer = MockRestServiceServer.bindTo(restTemplate).ignoreExpectOrder(true).build();
         }
@@ -38,7 +38,7 @@ public class RequestShipmentITest extends IntegrationTest {
     }
 
     @Test
-    public void givenPaidOrder_whenShipmentIsRequested_thenOrderStateIsShipmentRequested() throws Exception {
+    void givenPaidOrder_whenShipmentIsRequested_thenOrderStateIsShipmentRequested() throws Exception {
 
         mockServer.expect(requestTo("http://example.be/createShipment"))
                 .andRespond(withSuccess(objectMapper.writeValueAsString(new ShipmentResponseDto("123", "DELIVERED")), APPLICATION_JSON));
@@ -67,7 +67,7 @@ public class RequestShipmentITest extends IntegrationTest {
     }
 
     @Test
-    public void givenPaidOrderWithNotEnoughStock_whenShipmentIsRequested_thenOrderStateIsFailed() throws Exception {
+    void givenPaidOrderWithNotEnoughStock_whenShipmentIsRequested_thenOrderStateIsFailed() throws Exception {
 
         JPAProduct karmeliet = persistProduct(JPAProductTestData.karmeliet()
                 .quantity(0)
@@ -94,7 +94,7 @@ public class RequestShipmentITest extends IntegrationTest {
     }
 
     @Test
-    public void givenUnpaidOrder_whenShipmentIsRequested_thenError() throws Exception {
+    void givenUnpaidOrder_whenShipmentIsRequested_thenError() throws Exception {
 
         JPAProduct karmeliet = persistProduct(JPAProductTestData.karmeliet().build());
 

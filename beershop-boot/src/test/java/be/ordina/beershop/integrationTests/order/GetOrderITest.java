@@ -7,7 +7,7 @@ import be.ordina.beershop.product.JPAProductTestData;
 import be.ordina.beershop.repository.entities.Customer;
 import be.ordina.beershop.repository.entities.JPAProduct;
 import be.ordina.beershop.repository.entities.Order;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
@@ -16,10 +16,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class GetOrderITest extends IntegrationTest {
+class GetOrderITest extends IntegrationTest {
 
     @Test
-    public void whenOrderIsFound_thenOrderIsReturned() throws Exception {
+    void whenOrderIsFound_thenOrderIsReturned() throws Exception {
 
         Customer customer = persistCustomer(CustomerTestData.manVanMelle().build());
 
@@ -52,7 +52,7 @@ public class GetOrderITest extends IntegrationTest {
     }
 
     @Test
-    public void whenOrderDoesNotExist_thenNotFound() throws Exception {
+    void whenOrderDoesNotExist_thenNotFound() throws Exception {
         mockMvc.perform(
                 get("/orders/" + UUID.randomUUID()))
                 .andDo(print())

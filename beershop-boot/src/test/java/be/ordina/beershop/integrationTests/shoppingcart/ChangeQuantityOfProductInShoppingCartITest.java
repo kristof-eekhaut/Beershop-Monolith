@@ -7,7 +7,7 @@ import be.ordina.beershop.repository.entities.Customer;
 import be.ordina.beershop.repository.entities.JPAProduct;
 import be.ordina.beershop.repository.entities.JPAShoppingCart;
 import be.ordina.beershop.shoppingcart.ChangeQuantityOfProductInShoppingCart;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
 import java.util.UUID;
@@ -20,10 +20,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class ChangeQuantityOfProductInShoppingCartITest extends IntegrationTest {
+class ChangeQuantityOfProductInShoppingCartITest extends IntegrationTest {
 
     @Test
-    public void givenCustomerWithItemInShoppingCart_whenChangingQuantity_thenItemQuantityIsUpdated() throws Exception {
+    void givenCustomerWithItemInShoppingCart_whenChangingQuantity_thenItemQuantityIsUpdated() throws Exception {
 
         JPAProduct karmeliet = persistProduct(JPAProductTestData.karmeliet().build());
         Customer customer = persistCustomer(CustomerTestData.manVanMelle().build());
@@ -56,7 +56,7 @@ public class ChangeQuantityOfProductInShoppingCartITest extends IntegrationTest 
     }
 
     @Test
-    public void givenNoCustomer_whenChangingQuantity_thenNotFound() throws Exception {
+    void givenNoCustomer_whenChangingQuantity_thenNotFound() throws Exception {
 
         JPAProduct karmeliet = persistProduct(JPAProductTestData.karmeliet().build());
 

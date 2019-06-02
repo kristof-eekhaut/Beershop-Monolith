@@ -6,7 +6,7 @@ import be.ordina.beershop.product.JPAProductTestData;
 import be.ordina.beershop.repository.entities.Customer;
 import be.ordina.beershop.repository.entities.JPAProduct;
 import be.ordina.beershop.repository.entities.JPAShoppingCart;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
 import java.util.UUID;
@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class RemoveItemFromShoppingCartITest extends IntegrationTest {
 
     @Test
-    public void givenCustomerWithItemInShoppingCart_whenRemovingItem_thenShoppingCartIsEmpty() throws Exception {
+    void givenCustomerWithItemInShoppingCart_whenRemovingItem_thenShoppingCartIsEmpty() throws Exception {
 
         JPAProduct karmeliet = persistProduct(JPAProductTestData.karmeliet().build());
         Customer customer = persistCustomer(CustomerTestData.manVanMelle().build());
@@ -45,7 +45,7 @@ public class RemoveItemFromShoppingCartITest extends IntegrationTest {
     }
 
     @Test
-    public void givenCustomerWithMultipleItemsInShoppingCart_whenRemovingItem_thenItemIsRemovedAndOthersStayInShoppingCart() throws Exception {
+    void givenCustomerWithMultipleItemsInShoppingCart_whenRemovingItem_thenItemIsRemovedAndOthersStayInShoppingCart() throws Exception {
 
         JPAProduct karmeliet = persistProduct(JPAProductTestData.karmeliet().build());
         JPAProduct westmalle = persistProduct(JPAProductTestData.westmalle().build());
@@ -76,7 +76,7 @@ public class RemoveItemFromShoppingCartITest extends IntegrationTest {
     }
 
     @Test
-    public void givenCustomerWithItemInShoppingCart_whenRemovingNonExistingItem_thenShoppingCartIsUnchanged() throws Exception {
+    void givenCustomerWithItemInShoppingCart_whenRemovingNonExistingItem_thenShoppingCartIsUnchanged() throws Exception {
 
         JPAProduct karmeliet = persistProduct(JPAProductTestData.karmeliet().build());
         Customer customer = persistCustomer(CustomerTestData.manVanMelle().build());
@@ -106,7 +106,7 @@ public class RemoveItemFromShoppingCartITest extends IntegrationTest {
     }
 
     @Test
-    public void givenNoCustomer_whenRemovingItem_thenNotFound() throws Exception {
+    void givenNoCustomer_whenRemovingItem_thenNotFound() throws Exception {
 
         mockMvc.perform(
                 delete("/customers/" + UUID.randomUUID() + "/shopping-cart/line-items/" + UUID.randomUUID())
