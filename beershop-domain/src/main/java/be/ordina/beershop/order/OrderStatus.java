@@ -1,4 +1,4 @@
-package be.ordina.beershop.repository.entities;
+package be.ordina.beershop.order;
 
 public enum OrderStatus {
     CREATED,

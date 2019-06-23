@@ -2,14 +2,14 @@ package be.ordina.beershop.integrationTests;
 
 import be.ordina.beershop.BeershopApplication;
 import be.ordina.beershop.order.CreateOrder;
+import be.ordina.beershop.order.JPAOrderDAO;
+import be.ordina.beershop.order.OrderStatus;
 import be.ordina.beershop.product.CreateProduct;
+import be.ordina.beershop.product.JPAProductDAO;
 import be.ordina.beershop.repository.CustomerRepository;
-import be.ordina.beershop.repository.JPAProductDAO;
-import be.ordina.beershop.repository.OrderRepository;
-import be.ordina.beershop.repository.entities.Address;
 import be.ordina.beershop.repository.entities.Customer;
-import be.ordina.beershop.repository.entities.Order;
-import be.ordina.beershop.repository.entities.OrderStatus;
+import be.ordina.beershop.repository.entities.JPAAddress;
+import be.ordina.beershop.repository.entities.JPAOrder;
 import be.ordina.beershop.shoppingcart.AddProductToShoppingCart;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,10 +57,10 @@ class IntegrationTests {
     @Autowired
     private JPAProductDAO jpaProductDAO;
     @Autowired
-    private OrderRepository orderRepository;
+    private JPAOrderDAO orderRepository;
 
     private UUID customerId;
-    private Address address;
+    private JPAAddress address;
 
     @BeforeEach
     void setup() {
@@ -106,21 +106,32 @@ class IntegrationTests {
                .andDo(print())
                .andExpect(status().isOk());
 
+        CreateOrder.Address address = CreateOrder.Address.builder()
+                .street("Dorpstraat")
+                .number("28")
+                .postalCode("4321")
+                .country("Belgium")
+                .build();
         mockMvc.perform(
                 post("/orders")
-                        .content(objectMapper.writeValueAsString(new CreateOrder(customerId.toString())))
+                        .content(objectMapper.writeValueAsString(new CreateOrder(customerId.toString(), address)))
                         .contentType(MediaType.APPLICATION_JSON))
                .andDo(print())
                .andExpect(status().isCreated());
 
-        final List<Order> orders = orderRepository.findAll();
+        final List<JPAOrder> orders = orderRepository.findAll();
 
         assertThat(orders.size()).isEqualTo(1);
         assertThat(orders.get(0)).satisfies(savedOrder -> {
             assertThat(savedOrder.getState()).isEqualByComparingTo(OrderStatus.CREATED);
-            assertThat(savedOrder.getAddress()).isEqualTo(address);
-            assertThat(savedOrder.getLineItems().size()).isEqualTo(1);
-            assertThat(savedOrder.getLineItems().get(0)).satisfies(lineItem1 -> {
+            assertThat(savedOrder.getShipmentAddress()).isEqualTo(JPAAddress.builder()
+                    .street("Dorpstraat")
+                    .number("28")
+                    .postalCode("4321")
+                    .country("Belgium")
+                    .build());
+            assertThat(savedOrder.getItems().size()).isEqualTo(1);
+            assertThat(savedOrder.getItems().get(0)).satisfies(lineItem1 -> {
                 assertThat(lineItem1.getQuantity()).isEqualTo(3);
 //                assertThat(lineItem1.getPrice()).isEqualTo(new BigDecimal("3.60"));
             });
@@ -136,7 +147,7 @@ class IntegrationTests {
     }
 
     private void createCustomer() {
-        address = new Address();
+        address = new JPAAddress();
         address.setCountry("BE");
         address.setNumber("10");
         address.setStreet("Kerkstraat");

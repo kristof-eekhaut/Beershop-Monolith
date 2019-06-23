@@ -2,10 +2,14 @@ package be.ordina.beershop.integrationTests.order;
 
 import be.ordina.beershop.customer.CustomerTestData;
 import be.ordina.beershop.integrationTests.IntegrationTest;
-import be.ordina.beershop.order.OrderMatcher;
-import be.ordina.beershop.order.OrderTestData;
+import be.ordina.beershop.order.JPAOrderMatcher;
+import be.ordina.beershop.order.JPAOrderTestData;
+import be.ordina.beershop.order.OrderStatus;
 import be.ordina.beershop.product.JPAProductTestData;
-import be.ordina.beershop.repository.entities.*;
+import be.ordina.beershop.repository.entities.Customer;
+import be.ordina.beershop.repository.entities.JPAOrder;
+import be.ordina.beershop.repository.entities.JPAProduct;
+import be.ordina.beershop.repository.entities.JPAShoppingCart;
 import be.ordina.beershop.service.ShipmentResponseDto;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
+import static be.ordina.beershop.order.JPAOrderTestData.unpaidOrder;
 import static be.ordina.beershop.shoppingcart.JPAShoppingCartTestData.cartWithItems;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
@@ -48,7 +53,7 @@ class RequestShipmentITest extends IntegrationTest {
         Customer customer = persistCustomer(CustomerTestData.manVanMelle().build());
         JPAShoppingCart shoppingCart = persistShoppingCart(cartWithItems(customer.getId(), karmeliet).build());
 
-        Order order = persistOrder(OrderTestData.paidOrder(customer, shoppingCart.getId(), karmeliet).build());
+        JPAOrder order = persistOrder(JPAOrderTestData.paidOrder(customer, shoppingCart.getId(), karmeliet).build());
 
         mockMvc.perform(
                 patch("/orders/" + order.getId() + "/requestShipment"))
@@ -58,10 +63,10 @@ class RequestShipmentITest extends IntegrationTest {
         mockServer.verify();
 
         runInTransaction(() -> {
-            Order updatedOrder = orderRepository.findById(order.getId()).get();
-            MatcherAssert.assertThat(updatedOrder, OrderMatcher.matchesOrder(OrderTestData.unpaidOrder(customer, shoppingCart.getId(), karmeliet)
+            JPAOrder updatedOrder = orderRepository.findById(order.getId()).get();
+            MatcherAssert.assertThat(updatedOrder, JPAOrderMatcher.matchesOrder(unpaidOrder(customer, shoppingCart.getId(), karmeliet)
                     .state(OrderStatus.SHIPMENT_REQUESTED)
-                    .shipmentId("123")
+                    .shipmentTrackingNumber("123")
                     .build()));
         });
     }
@@ -76,7 +81,7 @@ class RequestShipmentITest extends IntegrationTest {
         Customer customer = persistCustomer(CustomerTestData.manVanMelle().build());
         JPAShoppingCart shoppingCart = persistShoppingCart(cartWithItems(customer.getId(), karmeliet).build());
 
-        Order order = persistOrder(OrderTestData.paidOrder(customer, shoppingCart.getId(), karmeliet).build());
+        JPAOrder order = persistOrder(JPAOrderTestData.paidOrder(customer, shoppingCart.getId(), karmeliet).build());
 
         mockMvc.perform(
                 patch("/orders/" + order.getId() + "/requestShipment"))
@@ -86,8 +91,8 @@ class RequestShipmentITest extends IntegrationTest {
         mockServer.verify();
 
         runInTransaction(() -> {
-            Order updatedOrder = orderRepository.findById(order.getId()).get();
-            MatcherAssert.assertThat(updatedOrder, OrderMatcher.matchesOrder(OrderTestData.unpaidOrder(customer, shoppingCart.getId(), karmeliet)
+            JPAOrder updatedOrder = orderRepository.findById(order.getId()).get();
+            MatcherAssert.assertThat(updatedOrder, JPAOrderMatcher.matchesOrder(unpaidOrder(customer, shoppingCart.getId(), karmeliet)
                     .state(OrderStatus.ORDER_FAILED)
                     .build()));
         });
@@ -101,7 +106,7 @@ class RequestShipmentITest extends IntegrationTest {
         Customer customer = persistCustomer(CustomerTestData.manVanMelle().build());
         JPAShoppingCart shoppingCart = persistShoppingCart(cartWithItems(customer.getId(), karmeliet).build());
 
-        Order order = persistOrder(OrderTestData.unpaidOrder(customer, shoppingCart.getId(), karmeliet).build());
+        JPAOrder order = persistOrder(unpaidOrder(customer, shoppingCart.getId(), karmeliet).build());
 
         mockMvc.perform(
                 patch("/orders/" + order.getId() + "/requestShipment"))
@@ -109,8 +114,8 @@ class RequestShipmentITest extends IntegrationTest {
                 .andExpect(status().is5xxServerError());
 
         runInTransaction(() -> {
-            Order updatedOrder = orderRepository.findById(order.getId()).get();
-            MatcherAssert.assertThat(updatedOrder, OrderMatcher.matchesOrder(OrderTestData.unpaidOrder(customer, shoppingCart.getId(), karmeliet)
+            JPAOrder updatedOrder = orderRepository.findById(order.getId()).get();
+            MatcherAssert.assertThat(updatedOrder, JPAOrderMatcher.matchesOrder(unpaidOrder(customer, shoppingCart.getId(), karmeliet)
                     .state(OrderStatus.CREATED)
                     .build()));
         });

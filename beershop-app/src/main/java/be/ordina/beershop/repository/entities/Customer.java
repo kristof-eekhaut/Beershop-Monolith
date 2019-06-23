@@ -18,7 +18,7 @@ public class Customer {
     private LocalDate birthDate;
 
     @Embedded
-    private Address address;
+    private JPAAddress address;
 
     public Customer() {
         // For Hibernate
@@ -47,11 +47,11 @@ public class Customer {
         this.name = name;
     }
 
-    public Address getAddress() {
+    public JPAAddress getAddress() {
         return address;
     }
 
-    public void setAddress(final Address address) {
+    public void setAddress(final JPAAddress address) {
         this.address = address;
     }
 
@@ -71,7 +71,7 @@ public class Customer {
         private UUID id;
         private String name;
         private LocalDate birthDate;
-        private Address address;
+        private JPAAddress address;
 
         private Builder() {
         }
@@ -91,7 +91,7 @@ public class Customer {
             return this;
         }
 
-        public Builder address(Address address) {
+        public Builder address(JPAAddress address) {
             this.address = address;
             return this;
         }

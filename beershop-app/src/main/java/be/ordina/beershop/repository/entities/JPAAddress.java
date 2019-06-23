@@ -4,8 +4,10 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.util.Objects;
 
+import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
+
 @Embeddable
-public class Address {
+public class JPAAddress {
 
     @Column(name = "STREET")
     private String street;
@@ -16,11 +18,11 @@ public class Address {
     @Column(name = "COUNTRY")
     private String country;
 
-    public Address() {
+    public JPAAddress() {
         // For Hibernate
     }
 
-    private Address(Builder builder) {
+    private JPAAddress(Builder builder) {
         setStreet(builder.street);
         setNumber(builder.number);
         setPostalCode(builder.postalCode);
@@ -59,7 +61,7 @@ public class Address {
     public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        final Address address = (Address) o;
+        final JPAAddress address = (JPAAddress) o;
         return Objects.equals(street, address.street) &&
                 Objects.equals(number, address.number) &&
                 Objects.equals(postalCode, address.postalCode) &&
@@ -69,6 +71,11 @@ public class Address {
     @Override
     public int hashCode() {
         return Objects.hash(street, number, postalCode, country);
+    }
+
+    @Override
+    public String toString() {
+        return reflectionToString(this);
     }
 
     public void setCountry(final String country) {
@@ -108,8 +115,8 @@ public class Address {
             return this;
         }
 
-        public Address build() {
-            return new Address(this);
+        public JPAAddress build() {
+            return new JPAAddress(this);
         }
     }
 }

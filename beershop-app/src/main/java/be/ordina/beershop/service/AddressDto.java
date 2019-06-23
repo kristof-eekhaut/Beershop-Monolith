@@ -1,6 +1,5 @@
 package be.ordina.beershop.service;
 
-import be.ordina.beershop.repository.entities.Address;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -37,12 +36,5 @@ public class AddressDto {
 
     public String getPostalCode() {
         return postalCode;
-    }
-
-    public AddressDto(final Address address) {
-        this.street = address.getStreet();
-        this.number = address.getNumber();
-        this.country = address.getCountry();
-        this.postalCode = address.getCountry();
     }
 }

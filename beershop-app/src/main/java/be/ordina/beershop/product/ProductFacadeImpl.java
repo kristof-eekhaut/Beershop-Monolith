@@ -12,13 +12,16 @@ class ProductFacadeImpl implements ProductFacade {
     private final CreateProductUseCase createProductUseCase;
     private final UpdateProductStockUseCase updateProductStockUseCase;
     private final GetAllProductsUseCase getAllProductsUseCase;
+    private final ReserveItemsForOrderUseCase reserveItemsForOrderUseCase;
 
     ProductFacadeImpl(CreateProductUseCase createProductUseCase,
                       UpdateProductStockUseCase updateProductStockUseCase,
-                      GetAllProductsUseCase getAllProductsUseCase) {
+                      GetAllProductsUseCase getAllProductsUseCase,
+                      ReserveItemsForOrderUseCase reserveItemsForOrderUseCase) {
         this.createProductUseCase = requireNonNull(createProductUseCase);
         this.updateProductStockUseCase = requireNonNull(updateProductStockUseCase);
         this.getAllProductsUseCase = requireNonNull(getAllProductsUseCase);
+        this.reserveItemsForOrderUseCase = requireNonNull(reserveItemsForOrderUseCase);
     }
 
     @Override
@@ -33,5 +36,10 @@ class ProductFacadeImpl implements ProductFacade {
 
     public Page<ProductView> getAllProducts(Pageable pageable) {
         return getAllProductsUseCase.execute(pageable);
+    }
+
+    @Override
+    public void reserveItemsForOrder(ReserveItemsForOrderCommand command) {
+        reserveItemsForOrderUseCase.execute(command);
     }
 }

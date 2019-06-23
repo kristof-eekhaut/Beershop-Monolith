@@ -15,11 +15,11 @@ import static org.apache.commons.lang3.builder.EqualsBuilder.reflectionEquals;
 import static org.apache.commons.lang3.builder.HashCodeBuilder.reflectionHashCode;
 import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 
-@Entity(name = "SHOPPING_CART_ITEM")
-public class JPAShoppingCartItem {
+@Entity(name = "ORDER_ITEM")
+public class JPAOrderItem {
 
     @EmbeddedId
-    private final JPAShoppingCartItemId id;
+    private final JPAOrderItemId id;
 
     @Column(name = "QUANTITY")
     private int quantity;
@@ -27,18 +27,22 @@ public class JPAShoppingCartItem {
     @Column(name = "PRODUCT_PRICE")
     private BigDecimal productPrice;
 
-    private JPAShoppingCartItem() {
+    @Column(name = "TOTAL_PRICE")
+    private BigDecimal totalPrice;
+
+    private JPAOrderItem() {
         // For hibernate
         this.id = null;
     }
 
-    private JPAShoppingCartItem(Builder builder) {
+    private JPAOrderItem(Builder builder) {
         this.id = requireNonNull(builder.id);
         setQuantity(builder.quantity);
         setProductPrice(builder.productPrice);
+        setTotalPrice(builder.totalPrice);
     }
 
-    public JPAShoppingCartItemId getId() {
+    public JPAOrderItemId getId() {
         return id;
     }
 
@@ -46,8 +50,8 @@ public class JPAShoppingCartItem {
         return id.getProductId();
     }
 
-    public UUID getShoppingCartId() {
-        return id.getShoppingCartId();
+    public UUID getOrderId() {
+        return id.getOrderId();
     }
 
     public int getQuantity() {
@@ -66,6 +70,14 @@ public class JPAShoppingCartItem {
         this.productPrice = productPrice;
     }
 
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(BigDecimal totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
     @Override
     public String toString() {
         return reflectionToString(this);
@@ -76,14 +88,15 @@ public class JPAShoppingCartItem {
     }
 
     public static final class Builder {
-        private JPAShoppingCartItemId id;
+        private JPAOrderItemId id;
         private int quantity;
         private BigDecimal productPrice;
+        private BigDecimal totalPrice;
 
         private Builder() {
         }
 
-        public Builder id(JPAShoppingCartItemId id) {
+        public Builder id(JPAOrderItemId id) {
             this.id = id;
             return this;
         }
@@ -98,32 +111,37 @@ public class JPAShoppingCartItem {
             return this;
         }
 
-        public JPAShoppingCartItem build() {
-            return new JPAShoppingCartItem(this);
+        public Builder totalPrice(BigDecimal totalPrice) {
+            this.totalPrice = totalPrice;
+            return this;
+        }
+
+        public JPAOrderItem build() {
+            return new JPAOrderItem(this);
         }
     }
 
     @Embeddable
-    public static class JPAShoppingCartItemId implements Serializable {
+    public static class JPAOrderItemId implements Serializable {
 
-        @Column(name = "SHOPPING_CART_ID")
-        private final UUID shoppingCartId;
+        @Column(name = "ORDER_ID")
+        private final UUID orderId;
         @Column(name = "PRODUCT_ID")
         private final UUID productId;
 
-        private JPAShoppingCartItemId() {
+        private JPAOrderItemId() {
             // For hibernate
-            this.shoppingCartId = null;
+            this.orderId = null;
             this.productId = null;
         }
 
-        public JPAShoppingCartItemId(UUID shoppingCartId, UUID productId) {
-            this.shoppingCartId = requireNonNull(shoppingCartId);
+        public JPAOrderItemId(UUID orderId, UUID productId) {
+            this.orderId = requireNonNull(orderId);
             this.productId = requireNonNull(productId);
         }
 
-        public UUID getShoppingCartId() {
-            return shoppingCartId;
+        public UUID getOrderId() {
+            return orderId;
         }
 
         public UUID getProductId() {

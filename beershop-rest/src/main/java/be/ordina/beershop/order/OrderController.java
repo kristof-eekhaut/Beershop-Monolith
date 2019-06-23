@@ -1,5 +1,6 @@
 package be.ordina.beershop.order;
 
+import be.ordina.beershop.order.dto.ShipmentAddressDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,13 @@ class OrderController {
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody @Valid CreateOrder createOrder) {
-        CreateOrderCommand command = new CreateOrderCommand(createOrder.getCustomerId());
+        ShipmentAddressDTO shipmentAddress = createOrder.getShipmentAddress() == null ? null :ShipmentAddressDTO.builder()
+                .street(createOrder.getShipmentAddress().getStreet())
+                .number(createOrder.getShipmentAddress().getNumber())
+                .country(createOrder.getShipmentAddress().getCountry())
+                .postalCode(createOrder.getShipmentAddress().getPostalCode())
+                .build();
+        CreateOrderCommand command = new CreateOrderCommand(createOrder.getCustomerId(), shipmentAddress);
         String orderId = orderFacade.createOrder(command);
 
         return ResponseEntity.created(URI.create("/orders/" + orderId)).build();

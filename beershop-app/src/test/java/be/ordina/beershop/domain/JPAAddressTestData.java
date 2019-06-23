@@ -1,11 +1,11 @@
 package be.ordina.beershop.domain;
 
-import be.ordina.beershop.repository.entities.Address;
+import be.ordina.beershop.repository.entities.JPAAddress;
 
-public class AddressTestData {
+public class JPAAddressTestData {
 
-    public static Address.Builder koekoekstraat70() {
-        return Address.builder()
+    public static JPAAddress.Builder koekoekstraat70() {
+        return JPAAddress.builder()
                 .street("Koekoekstraat")
                 .number("70")
                 .postalCode("9090")

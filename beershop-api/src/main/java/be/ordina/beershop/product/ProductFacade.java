@@ -10,4 +10,6 @@ public interface ProductFacade {
     void updateProductStock(UpdateProductStockCommand command);
 
     Page<ProductView> getAllProducts(Pageable pageable);
+
+    void reserveItemsForOrder(ReserveItemsForOrderCommand command);
 }

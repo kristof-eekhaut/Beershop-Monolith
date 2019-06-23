@@ -2,12 +2,12 @@ package be.ordina.beershop.integrationTests;
 
 import be.ordina.beershop.BeershopApplication;
 import be.ordina.beershop.repository.CustomerRepository;
-import be.ordina.beershop.repository.JPAProductDAO;
-import be.ordina.beershop.repository.OrderRepository;
+import be.ordina.beershop.product.JPAProductDAO;
+import be.ordina.beershop.order.JPAOrderDAO;
 import be.ordina.beershop.repository.entities.Customer;
 import be.ordina.beershop.repository.entities.JPAProduct;
 import be.ordina.beershop.repository.entities.JPAShoppingCart;
-import be.ordina.beershop.repository.entities.Order;
+import be.ordina.beershop.repository.entities.JPAOrder;
 import be.ordina.beershop.shoppingcart.JPAShoppingCartDAO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,7 +39,7 @@ public abstract class IntegrationTest {
     @Autowired
     protected JPAProductDAO jpaProductDAO;
     @Autowired
-    protected OrderRepository orderRepository;
+    protected JPAOrderDAO orderRepository;
     @Autowired
     protected CustomerRepository customerRepository;
     @Autowired
@@ -49,7 +49,7 @@ public abstract class IntegrationTest {
         return runInTransaction(() -> jpaProductDAO.save(product));
     }
 
-    protected Order persistOrder(Order order) {
+    protected JPAOrder persistOrder(JPAOrder order) {
         return runInTransaction(() -> orderRepository.save(order));
     }
 

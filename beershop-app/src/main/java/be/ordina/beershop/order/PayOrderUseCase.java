@@ -1,24 +1,27 @@
 package be.ordina.beershop.order;
 
-import be.ordina.beershop.service.BeerShopService;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
-import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;
 
 @Component
 class PayOrderUseCase {
 
-    private final BeerShopService beerShopService;
+    private final OrderRepository orderRepository;
 
-    PayOrderUseCase(BeerShopService beerShopService) {
-        this.beerShopService = requireNonNull(beerShopService);
+    PayOrderUseCase(OrderRepository orderRepository) {
+        this.orderRepository = requireNonNull(orderRepository);
     }
 
     @Transactional
-    void execute(String orderId) {
-        beerShopService.payOrder(UUID.fromString(orderId));
+    void execute(String orderIdString) {
+        OrderId orderId = OrderId.fromString(orderIdString);
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException(orderId));
+        order.pay();
+
+        orderRepository.update(order);
     }
 }

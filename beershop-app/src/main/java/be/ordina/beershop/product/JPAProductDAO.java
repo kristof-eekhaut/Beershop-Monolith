@@ -1,4 +1,4 @@
-package be.ordina.beershop.repository;
+package be.ordina.beershop.product;
 
 import be.ordina.beershop.repository.entities.JPAProduct;
 import org.springframework.data.jpa.repository.JpaRepository;

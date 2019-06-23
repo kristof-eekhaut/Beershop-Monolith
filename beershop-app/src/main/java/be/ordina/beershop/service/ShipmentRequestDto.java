@@ -1,7 +1,5 @@
 package be.ordina.beershop.service;
 
-import be.ordina.beershop.repository.entities.Address;
-
 import java.math.BigDecimal;
 
 public class ShipmentRequestDto {
@@ -9,8 +7,8 @@ public class ShipmentRequestDto {
     private final AddressDto address;
     private final BigDecimal weightInGrams;
 
-    public ShipmentRequestDto(final Address address, final BigDecimal weightInGrams) {
-        this.address = new AddressDto(address);
+    public ShipmentRequestDto(final AddressDto address, final BigDecimal weightInGrams) {
+        this.address = address;
         this.weightInGrams = weightInGrams;
     }
 

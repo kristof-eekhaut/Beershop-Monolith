@@ -1,11 +1,10 @@
 package be.ordina.beershop.order;
 
-import be.ordina.beershop.repository.entities.Address;
-import be.ordina.beershop.repository.entities.JPAShoppingCartItem;
-import be.ordina.beershop.repository.entities.Order;
 import be.ordina.beershop.order.dto.LineItemDTO;
 import be.ordina.beershop.order.dto.ShipmentAddressDTO;
-import be.ordina.beershop.repository.OrderRepository;
+import be.ordina.beershop.repository.entities.JPAAddress;
+import be.ordina.beershop.repository.entities.JPAOrder;
+import be.ordina.beershop.repository.entities.JPAOrderItem;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -18,9 +17,9 @@ import static java.util.Objects.requireNonNull;
 @Component
 class GetOrderUseCase {
 
-    private final OrderRepository orderRepository;
+    private final JPAOrderDAO orderRepository;
 
-    GetOrderUseCase(OrderRepository orderRepository) {
+    GetOrderUseCase(JPAOrderDAO orderRepository) {
         this.orderRepository = requireNonNull(orderRepository);
     }
 
@@ -29,28 +28,28 @@ class GetOrderUseCase {
                 .map(this::toOrderDTO);
     }
 
-    private OrderView toOrderDTO(Order order) {
+    private OrderView toOrderDTO(JPAOrder order) {
         return OrderView.builder()
                 .id(order.getId().toString())
-                .customerId(order.getCustomer().getId().toString())
-                .lineItems(order.getLineItems().stream()
+                .customerId(order.getCustomerId().toString())
+                .lineItems(order.getItems().stream()
                         .map(this::toLineItemDTO)
                         .collect(Collectors.toList()))
                 .state(order.getState().name())
-                .shipmentAddress(toShipmentAddressDTO(order.getAddress()))
-                .shipmentId(order.getShipmentId())
+                .shipmentAddress(toShipmentAddressDTO(order.getShipmentAddress()))
+                .shipmentId(order.getShipmentTrackingNumber().orElse(null))
                 .build();
     }
 
-    private LineItemDTO toLineItemDTO(JPAShoppingCartItem lineItem) {
+    private LineItemDTO toLineItemDTO(JPAOrderItem jpaOrderItem) {
         return LineItemDTO.builder()
-                .productId(lineItem.getProductId().toString())
-                .quantity(lineItem.getQuantity())
-                .price(lineItem.getProductPrice().multiply(new BigDecimal(lineItem.getQuantity())))
+                .productId(jpaOrderItem.getProductId().toString())
+                .quantity(jpaOrderItem.getQuantity())
+                .price(jpaOrderItem.getProductPrice().multiply(new BigDecimal(jpaOrderItem.getQuantity())))
                 .build();
     }
 
-    private ShipmentAddressDTO toShipmentAddressDTO(Address address) {
+    private ShipmentAddressDTO toShipmentAddressDTO(JPAAddress address) {
         return ShipmentAddressDTO.builder()
                 .street(address.getStreet())
                 .number(address.getNumber())

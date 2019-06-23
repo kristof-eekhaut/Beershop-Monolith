@@ -1,6 +1,6 @@
 package be.ordina.beershop.customer;
 
-import be.ordina.beershop.domain.AddressTestData;
+import be.ordina.beershop.domain.JPAAddressTestData;
 import be.ordina.beershop.repository.entities.Customer;
 
 import java.time.LocalDate;
@@ -13,6 +13,6 @@ public class CustomerTestData {
                 .id(UUID.randomUUID())
                 .name("Man van Melle")
                 .birthDate(LocalDate.of(1975, 8, 2))
-                .address(AddressTestData.koekoekstraat70().build());
+                .address(JPAAddressTestData.koekoekstraat70().build());
     }
 }

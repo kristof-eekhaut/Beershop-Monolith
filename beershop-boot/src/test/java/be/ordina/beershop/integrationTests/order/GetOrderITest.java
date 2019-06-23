@@ -2,11 +2,11 @@ package be.ordina.beershop.integrationTests.order;
 
 import be.ordina.beershop.customer.CustomerTestData;
 import be.ordina.beershop.integrationTests.IntegrationTest;
-import be.ordina.beershop.order.OrderTestData;
+import be.ordina.beershop.order.JPAOrderTestData;
 import be.ordina.beershop.product.JPAProductTestData;
 import be.ordina.beershop.repository.entities.Customer;
+import be.ordina.beershop.repository.entities.JPAOrder;
 import be.ordina.beershop.repository.entities.JPAProduct;
-import be.ordina.beershop.repository.entities.Order;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
@@ -25,7 +25,7 @@ class GetOrderITest extends IntegrationTest {
 
         JPAProduct karmeliet = persistProduct(JPAProductTestData.karmeliet().build());
         JPAProduct westmalle = persistProduct(JPAProductTestData.westmalle().build());
-        Order order = persistOrder(OrderTestData.unpaidOrder(customer, UUID.randomUUID(), karmeliet, westmalle).build());
+        JPAOrder order = persistOrder(JPAOrderTestData.unpaidOrder(customer, UUID.randomUUID(), karmeliet, westmalle).build());
 
         mockMvc.perform(
                 get("/orders/" + order.getId()))

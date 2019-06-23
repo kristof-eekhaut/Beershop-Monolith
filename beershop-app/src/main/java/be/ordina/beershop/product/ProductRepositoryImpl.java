@@ -1,7 +1,6 @@
 package be.ordina.beershop.product;
 
 import be.ordina.beershop.repository.AbstractJPARepository;
-import be.ordina.beershop.repository.JPAProductDAO;
 import be.ordina.beershop.repository.entities.JPADiscount;
 import be.ordina.beershop.repository.entities.JPAProduct;
 import be.ordina.beershop.repository.entities.JPAWeight;

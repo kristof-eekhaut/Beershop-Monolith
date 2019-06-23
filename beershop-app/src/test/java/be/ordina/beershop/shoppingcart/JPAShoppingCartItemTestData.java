@@ -1,4 +1,4 @@
-package be.ordina.beershop.order;
+package be.ordina.beershop.shoppingcart;
 
 import be.ordina.beershop.repository.entities.JPAProduct;
 import be.ordina.beershop.repository.entities.JPAShoppingCartItem;

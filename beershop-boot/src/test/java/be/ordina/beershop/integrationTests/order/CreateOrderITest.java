@@ -1,10 +1,10 @@
 package be.ordina.beershop.integrationTests.order;
 
 import be.ordina.beershop.customer.CustomerTestData;
-import be.ordina.beershop.domain.AddressTestData;
 import be.ordina.beershop.integrationTests.IntegrationTest;
 import be.ordina.beershop.order.CreateOrder;
-import be.ordina.beershop.order.OrderMatcher;
+import be.ordina.beershop.order.JPAOrderMatcher;
+import be.ordina.beershop.order.OrderStatus;
 import be.ordina.beershop.product.JPAProductTestData;
 import be.ordina.beershop.repository.entities.*;
 import be.ordina.beershop.shoppingcart.JPAShoppingCartTestData;
@@ -15,7 +15,8 @@ import org.springframework.http.MediaType;
 import java.util.List;
 import java.util.UUID;
 
-import static be.ordina.beershop.order.JPAShoppingCartItemTestData.shoppingCartItem;
+import static be.ordina.beershop.order.JPAOrderItemTestData.orderItem;
+import static be.ordina.beershop.shoppingcart.JPAShoppingCartItemTestData.shoppingCartItem;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -43,7 +44,13 @@ class CreateOrderITest extends IntegrationTest {
                         .build())
                 .build());
 
-        final CreateOrder createOrders = new CreateOrder(customer.getId().toString());
+        CreateOrder.Address shippingAddress = CreateOrder.Address.builder()
+                .street("Dorpstraat")
+                .number("28")
+                .postalCode("4321")
+                .country("Belgium")
+                .build();
+        final CreateOrder createOrders = new CreateOrder(customer.getId().toString(), shippingAddress);
 
         mockMvc.perform(
                 post("/orders")
@@ -53,19 +60,25 @@ class CreateOrderITest extends IntegrationTest {
                 .andExpect(status().isCreated());
 
         runInTransaction(() -> {
-            List<Order> persistedOrders = orderRepository.findAll();
+            List<JPAOrder> persistedOrders = orderRepository.findAll();
             assertThat(persistedOrders, hasSize(1));
 
-            Order createdOrder = persistedOrders.get(0);
-            MatcherAssert.assertThat(createdOrder, OrderMatcher.matchesOrder(Order.builder()
+            JPAOrder createdOrder = persistedOrders.get(0);
+            MatcherAssert.assertThat(createdOrder, JPAOrderMatcher.matchesOrder(JPAOrder.builder()
                     .id(createdOrder.getId())
-                    .customer(customer)
-                    .address(AddressTestData.koekoekstraat70().build())
+                    .customerId(customer.getId())
+                    .shoppingCartId(shoppingCartId)
+                    .shipmentAddress(JPAAddress.builder()
+                            .street("Dorpstraat")
+                            .number("28")
+                            .postalCode("4321")
+                            .country("Belgium")
+                            .build())
                     .state(OrderStatus.CREATED)
-                    .lineItem(shoppingCartItem(shoppingCartId, karmeliet)
+                    .item(orderItem(createdOrder.getId(), karmeliet)
                             .quantity(5)
                             .build())
-                    .lineItem(shoppingCartItem(shoppingCartId, westmalle)
+                    .item(orderItem(createdOrder.getId(), westmalle)
                             .quantity(2)
                             .build())
                     .build()));
@@ -77,8 +90,13 @@ class CreateOrderITest extends IntegrationTest {
 
     @Test
     void givenNoCustomer_whenCreatingNewOrder_thenOrderIsNotCreated() throws Exception {
-
-        final CreateOrder createOrders = new CreateOrder(UUID.randomUUID().toString());
+        CreateOrder.Address shippingAddress = CreateOrder.Address.builder()
+                .street("Dorpstraat")
+                .number("28")
+                .postalCode("4321")
+                .country("Belgium")
+                .build();
+        final CreateOrder createOrders = new CreateOrder(UUID.randomUUID().toString(), shippingAddress);
 
         mockMvc.perform(
                 post("/orders")
@@ -88,7 +106,7 @@ class CreateOrderITest extends IntegrationTest {
                 .andExpect(status().is4xxClientError());
 
         runInTransaction(() -> {
-            List<Order> persistedOrders = orderRepository.findAll();
+            List<JPAOrder> persistedOrders = orderRepository.findAll();
             assertThat(persistedOrders, hasSize(0));
         });
     }

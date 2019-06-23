@@ -60,6 +60,10 @@ public class ShoppingCart extends AbstractAggregateRoot<ShoppingCartId> {
                 .reduce(Price.ZERO, Price::add);
     }
 
+    public void clear() {
+        items.clear();
+    }
+
     private Optional<ShoppingCartItem> findItemForProduct(ProductId productId) {
         return items.stream()
                 .filter(item -> item.getProductId().equals(productId))

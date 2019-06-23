@@ -2,7 +2,6 @@ package be.ordina.beershop.shoppingcart;
 
 import be.ordina.beershop.repository.entities.JPAProduct;
 import be.ordina.beershop.repository.entities.JPAShoppingCart;
-import be.ordina.beershop.order.JPAShoppingCartItemTestData;
 
 import java.util.Arrays;
 import java.util.UUID;
