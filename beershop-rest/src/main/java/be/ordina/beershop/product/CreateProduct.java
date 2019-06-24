@@ -26,7 +26,7 @@ public class CreateProduct {
     private final CreateProduct.Weight weight;
 
     @JsonCreator
-    CreateProduct(@JsonProperty("customerId") final String name,
+    CreateProduct(@JsonProperty("name") final String name,
                   @JsonProperty("quantity") final int quantity,
                   @JsonProperty("price") final BigDecimal price,
                   @JsonProperty("alcoholPercentage") final BigDecimal alcoholPercentage,

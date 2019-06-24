@@ -1,0 +1,62 @@
+<h2>Products</h2>
+
+<div class="list">
+  <table *ngIf="products && products.content">
+    <tr>
+      <th>Name</th>
+      <th>Price</th>
+      <th>Alcohol percentage</th>
+      <th>Quantity</th>
+      <th>Weight</th>
+    </tr>
+    <tr *ngFor="let product of products.content">
+      <td>{{ product.name }}</td>
+      <td>{{ product.price }}</td>
+      <td>{{ product.alcoholPercentage }}</td>
+      <td>{{ product.quantity }}</td>
+      <td>{{ product.weight.amount }} {{ product.weight.unit }}</td>
+    </tr>
+  </table>
+</div>
+
+
+<h3>Create new product</h3>
+<form [formGroup]="createProductForm" (ngSubmit)="onCreateProduct()">
+  <label>
+    <div class="label">Name:</div>
+    <input type="text" formControlName="name">
+    <div *ngIf="submitted && createProductForm.controls.name.errors" class="error">
+      <div *ngIf="createProductForm.controls.name.errors.required" class="error">Product name is required!</div>
+    </div>
+  </label>
+  <label>
+    <div class="label">Price:</div>
+    <input type="text" formControlName="price">
+    <div *ngIf="submitted && createProductForm.controls.price.errors" class="error">
+      <div *ngIf="createProductForm.controls.price.errors.required" class="error">Price is required!</div>
+    </div>
+  </label>
+  <label>
+    <div class="label">Alcohol percentage:</div>
+    <input type="text" formControlName="alcoholPercentage">
+    <div *ngIf="submitted && createProductForm.controls.alcoholPercentage.errors" class="error">
+      <div *ngIf="createProductForm.controls.alcoholPercentage.errors.required" class="error">Alcohol percentage is required!</div>
+    </div>
+  </label>
+  <label>
+    <div class="label">Quantity:</div>
+    <input type="text" formControlName="quantity">
+    <div *ngIf="submitted && createProductForm.controls.quantity.errors" class="error">
+      <div *ngIf="createProductForm.controls.quantity.errors.required" class="error">Quantity is required!</div>
+    </div>
+  </label>
+  <label>
+    <div class="label">Weight:</div>
+    <input type="text" formControlName="weight">
+    <div *ngIf="submitted && createProductForm.controls.weight.errors" class="error">
+      <div *ngIf="createProductForm.controls.weight.errors.required" class="error">Weight is required!</div>
+    </div>
+  </label>
+
+  <input type="submit" value="Add product" class="submit">
+</form>

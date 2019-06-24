@@ -1,0 +1,68 @@
+label {
+  display: block;
+  margin-bottom: 10px;
+
+  .label {
+    display: inline-block;
+    width: 25%;
+  }
+
+  input {
+    width: 40%;
+    padding: 1em;
+  }
+
+  .error {
+    display: inline-block;
+    font-size: .9em;
+    color: red;
+    margin-left: 20px;
+  }
+}
+
+.submit {
+
+  background: #333344;
+  &:hover {
+    background: #3E3E4F;
+  }
+
+  border: none;
+  color: white;
+
+  text-transform: uppercase;
+  border-radius: 4px;
+  padding: 1em;
+  cursor: pointer;
+  font-family: 'Montserrat';
+}
+
+.list {
+  table {
+    margin: 0 0 50px;
+    padding: 0;
+    width: 100%;
+    background: #AAAABB;
+
+    tr {
+      padding: 2em;
+      border-radius: 2px;
+      margin-bottom: 2px;
+      grid-template-columns: 60px auto;
+
+      th {
+        width: 19%;
+        color: white;
+        font-weight: bold;
+        background: #333344;
+        padding: 5px;
+      }
+
+      td {
+        text-align: center;
+        background: #DDDDEE;
+        padding: 5px;
+      }
+    }
+  }
+}
